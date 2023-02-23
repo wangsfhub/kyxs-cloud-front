@@ -8,8 +8,13 @@ import getPageTitle from '@/utils/pageTitle'
 import {
     setting
 } from '@/config/setting.config'
+import NProgress from 'nprogress';
 
 router.beforeEach(async (to, from, next) => {
+    // 每次切换页面时，调用进度条
+    NProgress.start();
+    next();
+    return ;
     let hasToken = store.getters['user/accessToken']
 
     if (!setting.loginInterception) hasToken = true
@@ -67,5 +72,7 @@ router.beforeEach(async (to, from, next) => {
     }
 })
 router.afterEach((to) => {
+    // 在即将进入新的页面组件前，关闭掉进度条
+    NProgress.done()
     document.title = getPageTitle(to.meta.title)
 })

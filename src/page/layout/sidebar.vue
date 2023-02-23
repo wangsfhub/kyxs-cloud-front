@@ -10,7 +10,7 @@
                     <el-sub-menu v-for="(item,index) in localMenu" :key="item.id" :index="index">
                         <template #title>
                             <el-icon><location /></el-icon>
-                            <span>{{ item.label }}11</span>
+                            <span>{{ item.label }}</span>
                         </template>
                         <!-- 此处调用menu-item组件 -->
                         <sidebar-item :menuData="item.children"></sidebar-item>

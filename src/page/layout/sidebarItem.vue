@@ -20,10 +20,6 @@
         menus: null,
       };
     },
-    //inject: ['reload'],
-    // components:{
-    //   SidebarItem
-    // },
     props: {
       menuData: {
         type: Array,
@@ -52,9 +48,8 @@
         return path == null ? id : path;
       },
       openPage(item) {
-        debugger;
-        let path = item.path;
         let params = "";
+        let path = item.path;
         // 处理路由URL带参数的菜单
         if(typeof item.params === 'function') {
           params = item.params(this.$store);
@@ -70,7 +65,6 @@
         }
         console.log('我的路由',item.query, this.$route.query)
         if (item.path === this.$route.path) {
-          this.reload();
           if(item.query !=undefined ){
             this.$router.push({
               path: path,

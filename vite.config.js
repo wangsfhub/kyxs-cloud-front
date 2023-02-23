@@ -49,6 +49,8 @@ export default defineConfig({
     },
     // css 处理
     css: {
+        //控制台不出现css原路径
+        devSourcemap: true,
         loaderOptions: {
             scss: {
                 additionalData: '@import "./src/styles/global.scss";',
