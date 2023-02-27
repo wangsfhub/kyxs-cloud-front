@@ -1,16 +1,17 @@
 import axios from 'axios'
-import {
+
+import { netConfig } from '@/config/net.config'
+const {
     baseURL,
     contentType,
-    debounce,
     requestTimeout,
     successCode,
-    tokenName,
-} from '@/config'
+    tokenName, } =
+    netConfig;
 import store from '@/store'
 import qs from 'qs'
 import router from '@/router'
-import { isArray } from '@/utils/validate'
+import { ElMessage } from "element-plus";
 
 let loadingInstance
 
@@ -22,14 +23,14 @@ let loadingInstance
 const handleCode = (code, msg) => {
     switch (code) {
         case 401:
-            this.$message.error(msg || '登录失效')
+            ElMessage.error(msg || '登录失效')
             store.dispatch('user/resetAll').catch(() => {})
             break
         case 403:
             router.push({ path: '/401' }).catch(() => {})
             break
         default:
-            this.$message.error(msg || `后端接口${code}异常`)
+            ElMessage.error(msg || `后端接口${code}异常`)
             break
     }
 }
@@ -57,10 +58,7 @@ instance.interceptors.request.use(
             config.headers['Content-Type'] ===
             'application/x-www-form-urlencoded;charset=UTF-8'
         )
-            config.data = qs.stringify(config.data)
-        if (debounce.some((item) => config.url.includes(item))) {
-            //这里写加载动画
-        }
+        config.data = qs.stringify(config.data)
         return config
     },
     (error) => {
@@ -77,17 +75,13 @@ instance.interceptors.response.use(
 
         const { data, config } = response
         const { code, msg } = data
-        // 操作正常Code数组
-        const codeVerificationArray = isArray(successCode)
-            ? [...successCode]
-            : [...[successCode]]
         // 是否操作正常
-        if (codeVerificationArray.includes(code)) {
+        if (successCode.indexOf(code) !== -1) {
             return data
         } else {
             handleCode(code, msg)
             return Promise.reject(
-                'vue-admin-beautiful请求异常拦截:' +
+                '请求异常拦截:' +
                 JSON.stringify({ url: config.url, code, msg }) || 'Error'
             )
         }
@@ -111,7 +105,7 @@ instance.interceptors.response.use(
                 const code = message.substr(message.length - 3)
                 message = '后端接口' + code + '异常'
             }
-            this.$message.error(message || `后端接口未知异常`)
+            ElMessage.error(message || `后端接口未知异常`)
             return Promise.reject(error)
         }
     }

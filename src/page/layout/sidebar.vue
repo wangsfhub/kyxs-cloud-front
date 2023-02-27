@@ -9,7 +9,12 @@
                          :collapse="isCollapse">
                     <el-sub-menu v-for="(item,index) in localMenu" :key="item.id" :index="index">
                         <template #title>
-                            <el-icon><location /></el-icon>
+                            <icon-home
+                                class="icon-hover left-icon"
+                                theme="outline"
+                                size="16"
+                                fill="#666"
+                                :strokeWidth="4"/>
                             <span>{{ item.label }}</span>
                         </template>
                         <!-- 此处调用menu-item组件 -->
@@ -53,6 +58,9 @@
 </script>
 
 <style lang="scss" scoped>
+    .left-icon{
+      padding: 0px 10px;
+    }
     .el-menu{
         border-right: none;
     }
@@ -64,5 +72,7 @@
     .inner-menu::-webkit-scrollbar {
         display: none;
     }
-
+    .el-menu-item span {
+      margin-left: 16px;
+    }
 </style>

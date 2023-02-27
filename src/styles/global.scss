@@ -1,6 +1,9 @@
 @import './top.scss';
 @import './mixin.scss';
 @import './sidebar.scss';
+@import './variable.scss';
+@import './theme/light.scss';
+@import './theme/dark.scss';
 .h1,
 .h2,
 .h3,
@@ -17,28 +20,7 @@ h6 {
 }
 
 @include scrollBar();
-body,
-div,
-dl,
-dt,
-dd,
-ul,
-ol,
-li,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-pre,
-form,
-fieldset,
-input,
-p,
-blockquote,
-th,
-td {
+body{
   margin: 0;
   padding: 0;
 }
@@ -113,9 +95,6 @@ a {
   display: inline-block;
 }
 
-/*a:link{color:#009;}*/
-
-/*a:visited{color:#800080;}*/
 
 a:hover,
 a:active,
@@ -167,7 +146,6 @@ table {
 }
 
 .pull-height {
-  //height: 100%;
   overflow: hidden;
 }
 
@@ -209,67 +187,9 @@ table {
   box-sizing: border-box;
 }
 
-input::-webkit-inner-spin-button,
-input::-webkit-outer-spin-button {
-  webkit-appearance: none !important;
-  visibility: hidden;
-}
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-.ciic-link{
-  color: #1890ff;
-  text-decoration:underline;
-  cursor:pointer;
-  outline: 0;
-  background-color: transparent;
-  transition: color .3s;
-  webkit-text-decoration-skip: objects;
-}
-.ciic-link:hover {
-  color: #40a9ff;
-}
-
-.ciic-cursor-pointer {
-  cursor:pointer;
-}
-
 //过滤控件相关样式
 .el-tabs__content{
   overflow: visible;
-}
-.ciic-filter-form .el-form-item{
-  width: 100%;
-  display: flex;
-}
-
-.ciic-filter-form .el-form-item__content{
-  flex: 1 !important;
-  margin-left: 0 !important;
-  line-height: 0;
-}
-.ciic-filter-form .el-form-item__label{
-  line-height: 32px;
-}
-.ciic-filter-form .el-range-editor--small.el-input__inner{
-  width: 100%;
-}
-
-.ciic-filter-form .el-cascader--small{
-  width: 50%;
-}
-
-.ciic-filter-btns{
-  text-align: right;
-  margin-top: 5px;
-  .btn{
-    padding: 10px 15px;
-  }
-}
-
-.ciic-filter-form .el-date-editor.el-input{
-  width: 95%;
 }
 
 .icon {
@@ -279,9 +199,7 @@ input[type="number"] {
   overflow: hidden;
 }
 
-.ciic-table-operate{
-  display: flex;
-}
+
 
 
 @media only screen and (min-width: 1360px) {

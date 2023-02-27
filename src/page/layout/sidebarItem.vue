@@ -12,7 +12,6 @@
   </div>
 </template>
 <script>
-  import SidebarItem from './sidebarItem.vue'
   export default {
     name: 'SidebarItem',
     data() {
