@@ -86,7 +86,7 @@ const props = defineProps({
 });
 let autoHeight = ref(true)
 watch(() => props.autoHeight, (newVal, oldVal) => {
-  autoHeight = props.autoHeight;
+  autoHeight.value = newVal;
 })
 const topHeight = ref(0)
 watch(() => props.topHeight, (newVal, oldVal) => {

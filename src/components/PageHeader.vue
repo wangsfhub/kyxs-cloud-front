@@ -1,5 +1,5 @@
 <template>
-  <div class="page-header" id="pageHeader">
+  <div class="page-header" ref="pageHeader">
     <div class="left">
       <slot name="left"></slot>
     </div>
@@ -13,11 +13,14 @@
 </template>
 
 <script setup>
+  import { ref } from 'vue';
   import { useStore } from 'vuex';
   const store = useStore();
+  const pageHeader = ref(null);
   onMounted(()=>{
-    let height = document.getElementById("pageHeader").clientHeight
-    store.commit('user/setPageHeaderHeight',height);
+    console.log('获取dom元素',pageHeader)
+    //let height = document.getElementById("pageHeader").clientHeight
+    //store.commit('user/setPageHeaderHeight',height);
   });
 </script>
 

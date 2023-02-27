@@ -5,6 +5,7 @@
             <org-tree @getOrgId="setOrgId"/>
             <select-code setId="9001" @getValue="getValue" :multiple="false" placeholder="请选择状态"/>
             <select-org :multiple="false" @getOrgId="getDeptId" placeholder="请选择部门"/>
+            <el-button type="primary" @click="selectPerson">选择人员</el-button>
           </template>
           <template #right>
             <el-button type="primary" @click="add">新增</el-button>
@@ -16,6 +17,7 @@
         </myc-table>
     </div>
     <right-drawer ref="drawer" title="新增" @submit="submit"></right-drawer>
+    <select-person ref="personDialog" :data.sync="checkedList" @change="sureApprover"/>
 </template>
 <script setup>
     import { ref,reactive,getCurrentInstance } from 'vue'
@@ -25,15 +27,17 @@
     import RightDrawer from "@components/RightDrawer.vue";
     import SelectCode from "@components/SelectCode.vue"
     import SelectOrg from "@components/SelectOrg.vue"
+    import SelectPerson from "@components/SelectPerson.vue"
     import { ElLoading,ElMessage } from "element-plus"
     import {getOrgList} from "../../api/org";
     const drawer = ref(null)
+    const personDialog = ref(null);
     let { proxy } = getCurrentInstance();
     let pageObj = reactive({ //分页对象
         position: "right", //分页组件位置  center/right/left
         total: 100,
         pageData: {
-            current: 1,
+            page: 1,
             size: 10,
             superId: ''
         }
@@ -159,7 +163,7 @@
         ],
     });
     const setOrgId = (orgId)=>{
-      pageObj.pageData.current = 1;
+      pageObj.pageData.page = 1;
       pageObj.pageData.superId = orgId
       getOrgList(pageObj.pageData).then((res)=>{
         tableData.value = res.data
@@ -185,12 +189,12 @@
     };
     //页码变化
     const handleCurrentChange = (e)=> {
-        pageObj.pageData.current = e;
+        pageObj.pageData.page = e;
     };
     //条数变化
     const handleSizeChange = (e)=>{
         pageObj.pageData.size = e;
-        pageObj.pageData.current = 1;
+        pageObj.pageData.page = 1;
     }
     const submit = ()=>{
       ElLoading.service({
@@ -202,6 +206,11 @@
     }
     const getDeptId = (val) =>{
       ElMessage.success("选中的值："+val);
+    }
+
+    const checkedList = ref([])
+    const selectPerson = ()=>{
+        personDialog.value.isOpen()
     }
 </script>
 <style lang="scss">
