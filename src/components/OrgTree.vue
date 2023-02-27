@@ -33,7 +33,7 @@ export default {
   props: {
     selValue: {
       type: String,
-      required: true,
+      default: '',
     }
   },
   setup(props, {emit}) {

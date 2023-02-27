@@ -52,6 +52,7 @@ declare module '@vue/runtime-core' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SelectCode: typeof import('./src/components/SelectCode.vue')['default']
+    SelectOrg: typeof import('./src/components/SelectOrg.vue')['default']
     SelectPerson: typeof import('./src/components/SelectPerson.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon/index.vue')['default']
   }

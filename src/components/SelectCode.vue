@@ -1,5 +1,11 @@
 <template>
-  <el-select v-model="selectValue" :multiple="multiple" filterable clearable :placeholder="placeholder">
+  <el-select
+      v-model="value"
+      :multiple="multiple"
+      filterable
+      clearable
+      :placeholder="placeholder"
+      @change="getValue">
     <el-option
         v-for="item in options"
         :key="item.codeId"
@@ -13,7 +19,7 @@
 import {ref,reactive, toRefs} from 'vue'
 import {getAllCodes} from "../api/code";
 export default {
-  name: "orgTree",
+  name: "SelectCode",
   props: {
     setId: {
       type: String,
@@ -28,9 +34,9 @@ export default {
       default: false
     },
   },
-  setup(props) {
+  setup(props,{ emit }) {
     const data = reactive({
-      selectValue: '',
+      value: '',
       setId: props.setId,
       codeId: [],
       codeName: '',
@@ -38,7 +44,9 @@ export default {
       placeholder: props.placeholder,
       options:[]
     });
-    data.setId = props.setId;
+    const getValue = (data)=>{
+      emit('getValue',data)
+    }
     onMounted(()=>{
       getAllCodes().then((res) => {
         if(data.setId){
@@ -48,6 +56,7 @@ export default {
     })
     return {
       ...toRefs(data),
+      getValue
     };
   },
 }

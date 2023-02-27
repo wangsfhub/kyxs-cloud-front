@@ -3,7 +3,8 @@
         <page-header>
           <template #left>
             <org-tree @getOrgId="setOrgId"/>
-            <select-code setId="9001" :multiple="false" placeholder="请选择部门"/>
+            <select-code setId="9001" @getValue="getValue" :multiple="false" placeholder="请选择状态"/>
+            <select-org :multiple="false" @getOrgId="getDeptId" placeholder="请选择部门"/>
           </template>
           <template #right>
             <el-button type="primary" @click="add">新增</el-button>
@@ -23,6 +24,7 @@
     import OrgTree from "@components/OrgTree.vue";
     import RightDrawer from "@components/RightDrawer.vue";
     import SelectCode from "@components/SelectCode.vue"
+    import SelectOrg from "@components/SelectOrg.vue"
     import { ElLoading,ElMessage } from "element-plus"
     import {getOrgList} from "../../api/org";
     const drawer = ref(null)
@@ -190,11 +192,16 @@
         pageObj.pageData.size = e;
         pageObj.pageData.current = 1;
     }
-
     const submit = ()=>{
       ElLoading.service({
         text:'提交中...'
       })
+    }
+    const getValue = (val) =>{
+      ElMessage.success("选中的值："+val);
+    }
+    const getDeptId = (val) =>{
+      ElMessage.success("选中的值："+val);
     }
 </script>
 <style lang="scss">

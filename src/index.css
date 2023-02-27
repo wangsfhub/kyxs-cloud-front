@@ -8,3 +8,6 @@
   text-align: center;
   color: #2c3e50;
 }
+#nprogress .bar {
+  background: red !important; //自定义颜色
+}
