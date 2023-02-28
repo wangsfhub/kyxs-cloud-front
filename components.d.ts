@@ -33,6 +33,7 @@ declare module '@vue/runtime-core' {
     ElTabs: typeof import('element-plus/es')['ElTabs']
     ElTree: typeof import('element-plus/es')['ElTree']
     ElTreeSelect: typeof import('element-plus/es')['ElTreeSelect']
+    ErrorPage: typeof import('./src/components/ErrorPage/index.vue')['default']
     MycTable: typeof import('./src/components/MycTable.vue')['default']
     OrgTree: typeof import('./src/components/OrgTree.vue')['default']
     PageHeader: typeof import('./src/components/PageHeader.vue')['default']
@@ -44,8 +45,9 @@ declare module '@vue/runtime-core' {
     SelectBox: typeof import('./src/components/SelectPerson/selectBox.vue')['default']
     SelectCode: typeof import('./src/components/SelectCode.vue')['default']
     SelectOrg: typeof import('./src/components/SelectOrg.vue')['default']
-    SelectPerson: typeof import('./src/components/SelectPerson/SelectPerson.vue')['default']
+    SelectPerson: typeof import('./src/components/SelectPerson.vue')['default']
     SelectResult: typeof import('./src/components/SelectPerson/selectResult.vue')['default']
+    SelectRole: typeof import('./src/components/SelectRole.vue')['default']
     SvgIcon: typeof import('./src/components/SvgIcon/index.vue')['default']
   }
   export interface ComponentCustomProperties {

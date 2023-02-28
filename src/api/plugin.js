@@ -3,24 +3,23 @@
  */
 import request from '@/utils/request.js';
 
-export const getRoles = async () => {
+export const getRoles = async (data) => {
     return request({
         url: '/plugin/roles',
         method: 'get',
-        data:{}
+        data: data
     });
 };
-export const getDepartments = async () => {
+export const getDepartments = async (superId) => {
     return request({
         url: '/plugin/departments',
         method: 'get',
-        data:{}
     });
 };
-export const getEmployees = async () => {
+export const getEmployees = async (data) => {
     return request({
         url: '/plugin/employees',
         method: 'get',
-        data:{}
+        data: data
     });
 };

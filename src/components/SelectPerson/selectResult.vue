@@ -1,29 +1,29 @@
 <template>
   <div class="select-result l">
     <p class="clear">已选（{{total}}）
-        <a @click="$emit('del')">清空</a>
+        <a @click="del">清空</a>
     </p>
     <ul>
         <template v-for="({type, data, cancel}) in list">
           <template v-if="type === 'role'">
-            <li v-for="item in data" :key="item.roleId">
+            <li v-for="item in data" :key="item.id">
                 <img src="@/assets/images/icon_role.png">
-                <span>{{item.name}}</span>
-                <img src="@/assets/images/cancel.png" @click="cancel(item)">
+                <span>{{item.roleName}}</span>
+                <icon-close-one class="close" @click="cancel(item)"/>
             </li>
           </template>
           <template v-if="type === 'department'">
             <li v-for="item in data" :key="item.id">
                 <img src="@/assets/images/icon_file.png">
                 <span>{{item.departmentName}}</span>
-                <img src="@/assets/images/cancel.png" @click="cancel(item)">
+                <icon-close-one class="close" @click="cancel(item)"/>
             </li>
           </template>
           <template v-if="type === 'employee'">
             <li v-for="item in data" :key="item.id">
                 <img src="@/assets/images/icon_people.png">
                 <span>{{item.employeeName}}</span>
-                <img src="@/assets/images/cancel.png" @click="cancel(item)">
+                <icon-close-one class="close" @click="cancel(item)"/>
             </li>
           </template>
         </template>
@@ -31,6 +31,7 @@
   </div>
 </template>
 <script>
+import {toRefs,reactive} from 'vue'
 export default {
   props: {
     total: {
@@ -41,20 +42,32 @@ export default {
       type: Array,
       default: () => [{ type: 'role', data: [], cancel: function () { } }]
     }
+  },
+  setup(props, {emit}) {
+    const data = reactive({
+      list: props.list,
+      total: props.total
+    })
+    const del= ()=>{
+      emit('del',)
+    }
+    return {
+      ...toRefs(data),
+      del
+    };
   }
 }
 </script>
 
 <style lang="less">
 .select-result {
-  width: 276px;
+  width: 256px;
   height: 100%;
   font-size: 12px;
   float: left;
   ul {
     height: 360px;
     overflow-y: auto;
-
     li {
       margin: 11px 26px 13px 19px;
       line-height: 17px;
@@ -69,12 +82,12 @@ export default {
           vertical-align: middle;
           margin-right: 5px;
         }
-
-        &:last-of-type {
-          float: right;
-          margin-top: 2px;
-          width: 14px;
-        }
+      }
+     .close {
+        float: right;
+        margin-top: 2px;
+        font-size: 14px;
+        color: #ff6700;
       }
     }
   }
