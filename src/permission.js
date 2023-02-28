@@ -1,5 +1,5 @@
 /**
- * @author chuzhixin 1204505056@qq.com
+ * @author wangsf
  * @description 路由守卫，目前两种模式：all模式与intelligence模式
  */
 import router from '@/router'
@@ -20,20 +20,13 @@ NProgress.configure({
 router.beforeEach(async (to, from, next) => {
     // 每次切换页面时，调用进度条
     NProgress.start();
-    next();
-    return ;
     let hasToken = store.getters['user/accessToken']
-
     if (!setting.loginInterception) hasToken = true
-
     if (hasToken) {
         if (to.path === '/login') {
             next({ path: '/' })
         } else {
-            const hasRoles =
-                store.getters['acl/admin'] ||
-                store.getters['acl/role'].length > 0 ||
-                store.getters['acl/ability'].length > 0
+            const hasRoles = false
             if (hasRoles) {
                 next()
             } else {
@@ -54,8 +47,8 @@ router.beforeEach(async (to, from, next) => {
                     accessRoutes.forEach((item) => {
                         router.addRoute(item)
                     })
-
-                    next({ ...to, replace: true })
+                    next();
+                   // next({ ...to, replace: true })
                 } catch {
                     await store.dispatch('user/resetAll')
                     if (setting.recordRoute)

@@ -18,9 +18,9 @@
   const store = useStore();
   const pageHeader = ref(null);
   onMounted(()=>{
-    console.log('获取dom元素',pageHeader)
-    //let height = document.getElementById("pageHeader").clientHeight
-    //store.commit('user/setPageHeaderHeight',height);
+    let height = pageHeader.value.clientHeight
+    console.log('页头高度为：',height)
+    store.commit('user/setPageHeaderHeight',height);
   });
 </script>
 
