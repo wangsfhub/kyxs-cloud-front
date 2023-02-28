@@ -24,7 +24,7 @@
 
 <script setup>
     import { ref,reactive,computed,getCurrentInstance } from 'vue'
-    import { ElMessageBox } from 'element-plus'
+    import { ElMessage } from 'element-plus'
     import mixins from './SelectPerson/mixins.js'
     let {  getRoleList, getDebounceData } = mixins()
     const context = getCurrentInstance()?.appContext.config.globalProperties;
@@ -68,6 +68,7 @@
     }
     const submit = ()=>{
       emit('submit','')
+      ElMessage.success('选中的数据是：'+JSON.stringify(checkedRoleList.value));
     }
     defineExpose({
         isOpen,

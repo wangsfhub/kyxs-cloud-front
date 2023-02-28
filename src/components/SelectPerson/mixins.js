@@ -11,7 +11,7 @@ export default function () {
     roles.value = data;
     return roles.value;
   }
-  const getDepartmentList = async (parentId = 0)=>{
+  const getDepartmentList = async (parentId = -1)=>{
     let { data } = await getDepartments({ parentId })
     departments.value = data;
     return departments.value;

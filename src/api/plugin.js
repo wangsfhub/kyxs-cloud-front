@@ -10,11 +10,10 @@ export const getRoles = async (data) => {
         data: data
     });
 };
-export const getDepartments = async (data) => {
+export const getDepartments = async (superId) => {
     return request({
         url: '/plugin/departments',
         method: 'get',
-        data: data
     });
 };
 export const getEmployees = async (data) => {

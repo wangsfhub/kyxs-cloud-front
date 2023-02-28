@@ -30,6 +30,7 @@
 <script setup>
     import { ref,reactive,computed,getCurrentInstance } from 'vue'
     import mixins from './SelectPerson/mixins.js'
+    import {ElMessage} from "element-plus";
     let {  getDepartmentList, getDebounceData }=mixins()
     const context = getCurrentInstance()?.appContext.config.globalProperties;
     const func = context?.$func;
@@ -111,7 +112,8 @@
         dialogVisible.value = false
     }
     const submit = ()=>{
-      emit('submit','')
+      emit('submit','');
+      ElMessage.success('选中的数据是：'+JSON.stringify(checkedEmployessList.value));
     }
     defineExpose({
         isOpen,

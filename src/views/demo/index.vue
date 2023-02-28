@@ -201,9 +201,9 @@
         pageObj.pageData.page = 1;
     }
     const submit = ()=>{
-      ElLoading.service({
-        text:'提交中...'
-      })
+      // ElLoading.service({
+      //   text:'提交中...'
+      // })
     }
     const getValue = (val) =>{
       ElMessage.success("选中的值："+val);
