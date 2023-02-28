@@ -1,23 +1,25 @@
 <template>
     <div>
-        <page-header>
+        <PageHeader>
           <template #left>
-            <org-tree @getOrgId="setOrgId"/>
-            <select-code setId="9001" @getValue="getValue" :multiple="false" placeholder="请选择状态"/>
-            <select-org :multiple="false" @getOrgId="getDeptId" placeholder="请选择部门"/>
+            <OrgTree @getOrgId="setOrgId"/>
+            <SelectCode setId="9001" @getValue="getValue" :multiple="false" placeholder="请选择状态"/>
+            <SelectOrg :multiple="false" @getOrgId="getDeptId" placeholder="请选择部门"/>
             <el-button type="primary" @click="selectPerson">选择人员</el-button>
+            <el-button type="primary" @click="selectRole">选择角色</el-button>
           </template>
           <template #right>
             <el-button type="primary" @click="add">新增</el-button>
             <el-button>导出</el-button>
           </template>
-        </page-header>
-        <myc-table :tableData="tableData" :columObj="columObj" :pageObj="pageObj" @switchChange="switchChange" @editInputBlur="editInputBlur" @rowClick="rowClick"
+        </PageHeader>
+        <MycTable :tableData="tableData" :columObj="columObj" :pageObj="pageObj" @switchChange="switchChange" @editInputBlur="editInputBlur" @rowClick="rowClick"
                      @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange">
-        </myc-table>
+        </MycTable>
     </div>
-    <right-drawer ref="drawer" title="新增" @submit="submit"></right-drawer>
-    <select-person ref="personDialog" :data.sync="checkedList" @change="sureApprover"/>
+    <RightDrawer ref="drawer" title="新增" @submit="submit"></RightDrawer>
+    <SelectPerson ref="personDialog" :data.sync="checkedList" @submit="submit"></SelectPerson>
+    <SelectRole ref="roleDialog" :data.sync="checkedList" @submit="submit"></SelectRole>
 </template>
 <script setup>
     import { ref,reactive,getCurrentInstance } from 'vue'
@@ -28,10 +30,12 @@
     import SelectCode from "@components/SelectCode.vue"
     import SelectOrg from "@components/SelectOrg.vue"
     import SelectPerson from "@components/SelectPerson.vue"
+    import SelectRole from "@components/SelectRole.vue"
     import { ElLoading,ElMessage } from "element-plus"
     import {getOrgList} from "../../api/org";
     const drawer = ref(null)
-    const personDialog = ref(null);
+    const personDialog = ref(null)
+    const roleDialog = ref(null)
     let { proxy } = getCurrentInstance();
     let pageObj = reactive({ //分页对象
         position: "right", //分页组件位置  center/right/left
@@ -210,7 +214,10 @@
 
     const checkedList = ref([])
     const selectPerson = ()=>{
-        personDialog.value.isOpen()
+      personDialog.value.isOpen()
+    }
+    const selectRole = ()=>{
+      roleDialog.value.isOpen()
     }
 </script>
 <style lang="scss">

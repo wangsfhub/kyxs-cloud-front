@@ -59,7 +59,8 @@ import {
   Theme,
   Translate,
   Down,
-  DownOne
+  DownOne,
+  CloseOne
 } from '@icon-park/vue-next';
 import '@icon-park/vue-next/styles/index.css';
 // el-icon
@@ -114,7 +115,8 @@ export const components = [
   Theme,
   Translate,
   Down,
-  DownOne
+  DownOne,
+  CloseOne
 ];
 
 // 注册

@@ -20,7 +20,7 @@ h6 {
 }
 
 @include scrollBar();
-body{
+body,ul,p{
   margin: 0;
   padding: 0;
 }

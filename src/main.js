@@ -6,6 +6,8 @@ import './permission'; // 权限
 const app = createApp(App)
 import vuex from './store/index'
 import router from './router/index'
+import func from './plugins/preload.js'
+app.config.globalProperties.$func = func;
 
 //app.use(ElementPlus)
 app.use(vuex)
