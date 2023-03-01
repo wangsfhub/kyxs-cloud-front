@@ -1,10 +1,11 @@
 <template>
     <div class="pull-height animated">
         <div class="nav">
-            <top class="top" :isCollapse.sync="isCollapse" @switchCollapse="switchCollapse"/>
+            <Top class="top" :isCollapse.sync="isCollapse" @switchCollapse="switchCollapse"/>
         </div>
         <div class="index">
-            <sidebar class="left" :isCollapse.sync="isCollapse" />
+<!--            <sidebar class="left" :isCollapse.sync="isCollapse" />-->
+            <Menu :isCollapse="isCollapse" class="left hidden-xs-only" />
             <div class="right">
                 <div class="main">
                     <div class="router">
@@ -17,25 +18,14 @@
     </div>
 </template>
 
-<script>
+<script setup>
     import Top from './layout/top.vue'
-    import Sidebar from './layout/sidebar.vue'
-    export default {
-        name: "home",
-        components:{
-            Top,
-            Sidebar
-        },
-        data(){
-            return {
-                isCollapse:false
-            }
-        },
-        methods:{
-            switchCollapse(){
-                this.isCollapse = this.isCollapse?false:true;
-            }
-        }
+    // import Sidebar from './layout/sidebar.vue'
+    import Menu from "./menu/index.vue"
+    import {ref} from 'vue'
+    const isCollapse = ref(false)
+    const switchCollapse = () =>{
+        isCollapse.value = isCollapse.value?false:true;
     }
 </script>
 

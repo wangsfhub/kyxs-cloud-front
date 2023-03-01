@@ -1,5 +1,5 @@
 <template>
-  <span ref="buttonRef" v-click-outside="onClickOutside">
+  <span ref="buttonRef" v-click-outside="onClickOutside" class="current">
     {{checkedName}}
     <icon-down-one
         class="icon-hover"
@@ -76,5 +76,8 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
+    .current{
+      cursor: pointer;
+      font-size: 14px;
+    }
 </style>
