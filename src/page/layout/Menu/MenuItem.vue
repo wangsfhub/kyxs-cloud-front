@@ -20,27 +20,29 @@
     </el-menu-item>
     <el-sub-menu :class="{ 'is-black': isBlack }" :index="item.path" v-else>
         <template #title>
-            <component
-                    class="menu-icon"
-                    v-if="item.meta.icon"
-                    theme="outline"
-                    size="14"
-                    strokeWidth="3"
-                    :is="item.meta.icon"
-            />
+            <el-icon>
+              <component
+                      class="menu-icon"
+                      v-if="item.meta.icon"
+                      theme="outline"
+                      size="14"
+                      strokeWidth="3"
+                      :is="item.meta.icon"
+              />
+            </el-icon>
             <span class="title">{{ item.meta.title }}</span>
         </template>
         <template v-for="(option, index) in item.children">
             <menu-item v-if="option.children" :key="option.path" :item="option" />
             <el-menu-item v-else :index="option.path" :key="index">
-                <component
-                        class="menu-icon"
-                        v-if="option.meta.icon"
-                        theme="outline"
-                        size="14"
-                        strokeWidth="3"
-                        :is="option.meta.icon"
-                />
+<!--                <component-->
+<!--                        class="menu-icon"-->
+<!--                        v-if="option.meta.icon"-->
+<!--                        theme="outline"-->
+<!--                        size="14"-->
+<!--                        strokeWidth="3"-->
+<!--                        :is="option.meta.icon"-->
+<!--                />-->
                 <span class="title">
                     {{ option.meta.title }}
                 </span>
@@ -48,7 +50,6 @@
         </template>
     </el-sub-menu>
 </template>
-
 <script>
     export default {
         name: 'MenuItem',
@@ -88,8 +89,7 @@
     });
 </script>
 <style lang="scss" scoped>
-    .menu-icon,
-    .icon {
+    .menu-icon,.icon {
         display: inline-flex;
         align-items: center;
         justify-content: center;

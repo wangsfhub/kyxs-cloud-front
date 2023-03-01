@@ -1,5 +1,5 @@
 <template>
-    <el-scrollbar height="100vh">
+    <el-scrollbar>
         <el-menu
                 :default-active="defaultActive"
                 :background-color="menuBgColor"
@@ -15,7 +15,7 @@
                 @open="handleOpen"
                 @close="handleClose"
         >
-<!--            <Logo v-if="isLogo" />-->
+<!--             <Logo v-if="isLogo" />-->
             <template v-for="item in routes">
                 <template v-if="!item.hidden">
                     <menu-item :item="{ ...item, isBlack }" :key="item.path" />
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+    // import Logo from "../Logo/index.vue";
     import MenuItem from "./MenuItem.vue";
     export default {
         name: 'Menu',
@@ -112,14 +113,15 @@
 
 <style lang="scss" scoped>
     .el-menu-vertical {
-        /*position: fixed;*/
-        /*top: 0;*/
-        /*bottom: 0;*/
-        /*left: 0;*/
-        /*height: 100vh;*/
-        /*overflow-x: hidden;*/
-        /*overflow-y: auto;*/
-        //@include base-scrollbar;
+        position: fixed;
+        top: 60px;
+        bottom: 0;
+        left: 0;
+        height: calc(100vh - 60px);
+        overflow-x: hidden;
+        overflow-y: auto;
+        border-right: 0px solid #f1f2f5;
+        @include base-scrollbar;
         &:not(.el-menu--collapse) {
             width: $base-menu-width;
         }

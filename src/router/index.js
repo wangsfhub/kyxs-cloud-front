@@ -60,7 +60,7 @@ export const asyncRoutes = [
         path: '/org',
         component: Layout,
         name: 'Org',
-        meta: { title: '组织管理', icon: 'icon-code' },
+        meta: { title: '组织管理', icon: 'icon-network-tree' },
         children: [
             {
                 path: '/org',
@@ -68,7 +68,7 @@ export const asyncRoutes = [
                 component: () => import('@/views/org/index.vue'),
                 meta: {
                     title: '组织管理',
-                    icon: 'icon-code',
+                    icon: 'icon-network-tree',
                 },
             },
         ],
@@ -77,15 +77,15 @@ export const asyncRoutes = [
         path: '/emp',
         component: Layout,
         name: 'emp',
-        meta: { title: '员工花名册', icon: 'icon-code' },
+        meta: { title: '员工管理', icon: 'icon-people' },
         children: [
             {
                 path: '/emp',
-                name: '员工管理',
+                name: '员工花名册',
                 component: () => import('@/views/emp/index.vue'),
                 meta: {
                     title: '员工管理',
-                    icon: 'icon-code',
+                    icon: 'icon-people',
                 },
             },
         ],
@@ -119,6 +119,24 @@ export const asyncRoutes = [
             },
         ],
     },
+    {
+        path: '/demo',
+        component: Layout,
+        name: 'Demo',
+        children: [
+            {
+                path: '/demo',
+                name: 'Demo',
+                component: () => import('@/views/demo/index.vue'),
+                meta: {
+                    title: '组件实例',
+                    icon: 'icon-code',
+                    affix: true,
+                    noKeepAlive: true,
+                },
+            }
+        ]
+    }
 ];
 
 const allRouter = constantRoutes.concat(asyncRoutes)

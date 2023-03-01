@@ -10,7 +10,7 @@
     >
       <div class="person_body clear">
         <div class="person_tree l">
-          <input type="text" placeholder="搜索角色" style="padding-left:30px;" v-model="searchVal" @input="getDebounceData($event,2)">
+          <el-input type="text" placeholder="搜索角色" v-model="searchVal" @input="getDebounceData($event,2)"/>
           <selectBox :list="list" />
         </div>
         <selectResult :total="total" @del="delList" :list="resList"/>

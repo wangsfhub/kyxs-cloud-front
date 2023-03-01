@@ -5,7 +5,7 @@
     <div>
       <el-table size="medium" :data="tableData" :stripe="false" :border="false" :fit="true" :show-header="true"
                 :highlight-current-row="true" v-loading="columObj.loading" :row-class-name="tableRowClassName"
-                @row-click="rowClick" :style="'height: calc(100vh - 65px - 20px - 62px - '+topHeight+'px)'">
+                @row-click="rowClick" :style="'height: calc(100vh - 60px - '+(tag?55:0)+'px - 20px - 62px - '+topHeight+'px)'">
           <!-- 选择框是否开启，selectable控制是否单行禁用 -->
           <el-table-column v-if="columObj.selection" type="selection" :selectable="columObj.selectable" width="50px"/>
           <!-- 普通列 -->
@@ -55,7 +55,7 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import { useStore } from 'vuex';
 const store = useStore();
 const props = defineProps({
@@ -92,6 +92,10 @@ const topHeight = ref(0)
 watch(() => props.topHeight, (newVal, oldVal) => {
   topHeight.value = props.topHeight;
 })
+//是否显示页签
+const tag = computed(() => {
+  return store.getters['setting/tag'];
+});
 onMounted(()=>{
   if(autoHeight.value){
     topHeight.value = store.getters.pageHeaderHeight + 1

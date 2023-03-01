@@ -1,6 +1,8 @@
 <template>
   <el-config-provider :locale="locale">
-    <router-view />
+    <el-scrollbar height="100vh" ref="scroll">
+      <router-view></router-view>
+    </el-scrollbar>
   </el-config-provider>
 </template>
 

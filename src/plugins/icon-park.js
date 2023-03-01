@@ -60,7 +60,9 @@ import {
   Translate,
   Down,
   DownOne,
-  CloseOne
+  CloseOne,
+  NetworkTree,
+  People
 } from '@icon-park/vue-next';
 import '@icon-park/vue-next/styles/index.css';
 // el-icon
@@ -116,7 +118,9 @@ export const components = [
   Translate,
   Down,
   DownOne,
-  CloseOne
+  CloseOne,
+  NetworkTree,
+  People
 ];
 
 // 注册

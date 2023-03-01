@@ -16,9 +16,9 @@
           <a v-if="elem.isDepartment"
             :class="elem.isActive(item) && 'active'"
             @click="elem.change(item)">
-              <img src="@/assets/images/icon_file.png">{{item.departmentName}}</a>
-          <a v-else><img src="@/assets/images/icon_file.png">{{item.departmentName}}</a>
-          <i @click="elem.next(item)">下级</i>
+            <img src="@/assets/images/icon_file.png">{{item.departmentName}}</a>
+            <a v-else><img src="@/assets/images/icon_file.png">{{item.departmentName}}</a>
+            <i @click="elem.next(item)">下级</i>
         </li>
       </template>
       <template v-if="elem.type === 'employee'">

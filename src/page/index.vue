@@ -1,95 +1,96 @@
 <template>
-    <div class="pull-height animated">
-        <div class="nav">
-            <Top class="top" :isCollapse.sync="isCollapse" @switchCollapse="switchCollapse"/>
-        </div>
-        <div class="index">
-<!--            <sidebar class="left" :isCollapse.sync="isCollapse" />-->
-            <Menu :isCollapse="isCollapse" class="left hidden-xs-only" />
-            <div class="right">
-                <div class="main">
-                    <div class="router">
-                        <router-view/>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
+  <div class="admin-container">
+    <el-container v-if="mode === 'vertical'" class="container" :style="{ left: isCollapse ? '65px' : '240px' }">
+      <el-header
+          class="header"
+          :class="{ fixed: fixedHead, notag: !tag }"
+          height="60px"
+      >
+        <NavBar @handleCollapse="handleCollapse" />
+        <template v-if="tag">
+          <TabBar />
+        </template>
+      </el-header>
+      <Menu :isCollapse="isCollapse" class="hidden-xs-only" />
+      <el-main class="main" :class="{ fixed: fixedHead, notag: !tag }">
+        <AppMain />
+      </el-main>
+    </el-container>
+    <Horizontal v-if="mode === 'horizontal'" />
+<!--      <el-backtop />-->
+  </div>
 </template>
 
 <script setup>
-    import Top from './layout/top.vue'
-    // import Sidebar from './layout/sidebar.vue'
-    import Menu from "./menu/index.vue"
-    import {ref} from 'vue'
-    const isCollapse = ref(false)
-    const switchCollapse = () =>{
-        isCollapse.value = isCollapse.value?false:true;
-    }
+import Menu from "./layout/Menu/index.vue";
+import NavBar from "./layout/NavBar/index.vue";
+import TabBar from "./layout/TabBar/index.vue";
+import AppMain from "./layout/AppMain/index.vue";
+import Horizontal from "./layout/Horizontal/index.vue";
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+const store = useStore();
+
+const isMobile = computed(() => {
+  return store.getters['setting/isMobile'];
+});
+
+const fixedHead = computed(() => {
+  return store.getters['setting/fixedHead'];
+});
+
+const tag = computed(() => {
+  return store.getters['setting/tag'];
+});
+
+const isCollapse = computed(() => {
+  return store.getters.collapse;
+});
+
+const mode = computed(() => {
+  return store.getters['setting/mode'];
+});
+
+const handleCollapse = () => {
+  store.dispatch('setting/changeCollapse');
+};
 </script>
 
 <style lang="scss" scoped>
-.index {
-     display: flex;
-     position: relative;
-     height: calc(100vh - 65px);
-     overflow: hidden;
-    .left {
-        width: 200px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        position: relative;
-        margin-top: 0px;
-        border-right: 1px solid var(--left-border-right-background);
+.admin-container {
+  position: relative;
+  background-color: $base-content-bg-color;
+  .container {
+    position: absolute;
+    right: 0;
+    transition: all $base-transition-time-4;
+  }
+  .header {
+    padding: 0;
+    transition: all $base-transition-time-4;
+    &.fixed {
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      z-index: $base-z-index-999;
     }
-    .left:before{
-        content:"";
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 1px;
-        height: 100%;
-        z-index: 10;
+  }
+  .main {
+    position: relative;
+    top: $base-main-vertical-top;
+    overflow-y: auto;
+    padding: 10px;
+    &.fixed {
+      top: $base-main-fixed-top;
     }
-    .left.is-active:before{
-        content:"";
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 1px;
-        height: 100%;
+    &[class='el-main main fixed notag'] {
+      top: $base-main-vertical-fixed-notag-top;
     }
-    .right {
-        position: relative;
-        height: 100%;
-        box-sizing: border-box;
-        overflow: hidden;
-        flex: 1;
+    &[class='el-main main notag'] {
+      top: $base-main-notag-top;
     }
-    .main {
-        height: 100%;
-        background: var(--main-background);
-        box-sizing: border-box;
-        overflow-y: auto;
-        .router {
-            margin: 10px;
-            background: var(--router-background);
-            min-height: calc(100% - 20px);
-            height: auto;
-            overflow: auto;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-    }
-    .nav {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        z-index: 12;
-        box-shadow: 0 0 1px rgba(0,0,0,0.25);
-    }
-
+    background-color: $base-content-bg-color;
+  }
 }
 </style>
