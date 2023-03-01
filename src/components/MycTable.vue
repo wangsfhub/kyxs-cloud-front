@@ -38,10 +38,13 @@
                   <el-input v-focus v-if="column.editRow == $index" v-model="row[column.prop]" @blur="editInputBlur(row,$index,column.prop,columIndex)"/>
                   <!-- 操作按钮 -->
                   <span v-if="column.isOperation" v-for="(operations, index) in column.operation" :key="index">
-          <el-button v-if="operations.isShow(row,$index)" :icon="operations.icon" :type="operations.type" @click="operations.buttonClick(row,$index)" :style="{color:operations.color}" size="small">{{operations.label}}</el-button>
-        </span>
+                    <el-button v-if="operations.isShow(row,$index)" :icon="operations.icon" :type="operations.type" @click="operations.buttonClick(row,$index)" :style="{color:operations.color}" size="small">{{operations.label}}</el-button>
+                  </span>
               </template>
           </el-table-column>
+        <template #empty>
+          <el-empty :image-size="150" class="empty"/>
+        </template>
       </el-table>
       <!-- 分页 -->
       <div class="page_div" :style="{textAlign: pageObj.position || 'center'}">
@@ -146,11 +149,10 @@ const handleCurrentChange = (e) =>{
         color: #606266;
     }
 
-    img {
-        height: 400px;
-    }
-
     .page_div {
         padding: 15px 15px;
+    }
+    .empty{
+      margin-top: 20%;
     }
 </style>

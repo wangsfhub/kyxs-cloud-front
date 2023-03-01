@@ -97,11 +97,11 @@
           padding: 3px 10px;
         }
         a:hover{
-          background: #657dcc;
+          background: var(--them-color);
           color: #fff;
         }
         a.active{
-          background: #657dcc;
+          background: var(--them-color);
           color: #fff;
         }
       }
