@@ -1,7 +1,7 @@
 <template>
   <div class="nav-bar-container">
     <el-row :gutter="15">
-      <el-col :xs="18" :sm="18" :md="18" :lg="18" :xl="18" v-if="settings.mode !== ''">
+      <el-col :xs="20" :sm="20" :md="20" :lg="20" :xl="20" v-if="settings.mode !== ''">
         <div class="left-panel">
           <Logo v-if="isLogo" style="width: 240px;"/>
           <component
@@ -25,11 +25,10 @@
             <a :class="currentNav==5?'active':''" @click="handleNav(5)">费控报销</a>
             <a :class="currentNav==6?'active':''" @click="handleNav(6)">企业招聘</a>
             <a :class="currentNav==7?'active':''" @click="handleNav(7)">使用指南</a>
-            <a :class="currentNav==8?'active':''" @click="handleNav(8)">建议反馈</a>
           </div>
         </div>
       </el-col>
-      <el-col :xs="6" :sm="6" :md="6" :lg="6" :xl="6">
+      <el-col :xs="4" :sm="4" :md="4" :lg="4" :xl="4">
         <RightPanel />
       </el-col>
     </el-row>
@@ -91,10 +90,9 @@
       .nav-box{
         margin-left: 30px;
         a{
-          padding: 10px  20px;
           margin: 0px 10px;
           border-radius: 15px;
-          padding: 3px 10px;
+          padding: 5px 10px;
         }
         a:hover{
           background: var(--them-color);

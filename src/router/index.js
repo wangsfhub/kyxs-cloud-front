@@ -71,6 +71,15 @@ export const asyncRoutes = [
                     icon: 'icon-network-tree',
                 },
             },
+            {
+                path: '/position',
+                name: '岗位管理',
+                component: () => import('@/views/org/position.vue'),
+                meta: {
+                    title: '岗位管理',
+                    icon: 'icon-network-tree',
+                },
+            },
         ],
     },
     {

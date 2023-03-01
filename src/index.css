@@ -1,12 +1,13 @@
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   font-size: 14px;
-  color: #2c3e50;
+  color: #24292f;
+  background: #f1f2f5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 #nprogress .bar {
-  background: #7e9cff !important; //自定义颜色
+  background: #7e9cff !important; /*自定义颜色*/
 }
 a{
   text-decoration: none;
