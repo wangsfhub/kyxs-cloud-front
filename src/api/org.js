@@ -17,6 +17,13 @@ export const getOrgList = async (superId) => {
         data:{'superId':superId}
     });
 };
+export const getPostList = async (deptId) => {
+    return request({
+        url: '/position/list',
+        method: 'get',
+        data:{'deptId':deptId}
+    });
+};
 
 
 

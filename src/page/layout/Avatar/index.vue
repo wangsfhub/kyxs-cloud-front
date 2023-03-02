@@ -5,7 +5,7 @@
       <img class="user-avatar" src="@assets/user-avatar.gif" alt="" />
       <div class="user-name">
         {{ userName }}
-        <i class="el-icon-arrow-down el-icon--right"></i>
+        <el-icon class="el-icon--right"><i-ep-arrow-down /></el-icon>
       </div>
     </span>
     <template #dropdown>
@@ -93,6 +93,7 @@
     }
 
     .user-name {
+      display: flex;
       position: relative;
       margin-left: $base-margin-5;
       margin-left: $base-margin-5;

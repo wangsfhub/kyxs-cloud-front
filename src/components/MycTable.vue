@@ -13,35 +13,26 @@
                            :label="column.label" :width="column.width" :fixed="column.fixed" :align="column.align || 'center'"
                            :sortable="column.sortable" :index="columIndex" show-overflow-tooltip>
               <template #default="{row,$index}">
-
                   <!-- 默认展示 -->
                   <span v-if="column.text && column.editRow != $index">{{row[column.prop]}}</span>
                   <!-- 状态对象展示 -->
                   <span v-if="column.status && row[column.prop]">{{row[column.prop].msg}}</span>
                   <!-- 自定义内容 -->
-                  <span v-if="column.ownDefined">{{column.ownDefinedReturn(row,$index)}}</span>
+                  <template v-if="column.ownDefined">
+                    <el-tag v-if="column.definedType == 'tag'" :type="column.ownDefinedReturn(row,$index).type">{{column.ownDefinedReturn(row,$index).value}}</el-tag>
+                    <span v-else>{{column.ownDefinedReturn(row,$index)}}</span>
+                  </template>
                   <!-- switch开关 -->
-                  <el-switch v-if="column.switch" v-model="row[column.prop]" :inactive-text="row[column.prop] ? column.openText:column.closeText" @change="switchChange(row,$index,column.prop)"/>
-                  <!-- 图片展示 -->
-                  <el-popover trigger="hover" placement="top" popper-class="popper">
-                      <img v-if="column.image" :src="viewUrl + row[column.prop]" />
-                      <el-image slot="reference" v-if="column.image" :src="viewUrl + row[column.prop]"/>
-                  </el-popover>
-
-                  <!-- 图片数组 -->
-                  <el-popover v-if="column.imageArr" trigger="hover" placement="top" popper-class="popper">
-                      <img v-if="row[column.prop].length>0" :src="row[column.prop][0]" />
-                      <el-image slot="reference" v-if="row[column.prop].length >0" :src="row[column.prop][0]" :preview-src-list="row[column.prop]"/>
-                  </el-popover>
-
+                  <el-switch v-if="column.switch" v-model="row[column.prop]" :active-value="column.activeValue" :inactive-value="column.inactiveValue" @change="switchChange(row,$index,column.prop)"/>
                   <!-- 可编辑input，仅在text默认展示类型才可编辑-->
                   <el-input v-focus v-if="column.editRow == $index" v-model="row[column.prop]" @blur="editInputBlur(row,$index,column.prop,columIndex)"/>
                   <!-- 操作按钮 -->
                   <span v-if="column.isOperation" v-for="(operations, index) in column.operation" :key="index">
-                    <el-button v-if="operations.isShow(row,$index)" :icon="operations.icon" :type="operations.type" @click="operations.buttonClick(row,$index)" :style="{color:operations.color}" size="small">{{operations.label}}</el-button>
+                    <el-button link v-if="operations.isShow(row,$index)" :icon="operations.icon" :type="operations.type" @click="operations.buttonClick(row,$index)" size="small">{{operations.label}}</el-button>
                   </span>
               </template>
           </el-table-column>
+
         <template #empty>
           <el-empty :image-size="150" class="empty"/>
         </template>

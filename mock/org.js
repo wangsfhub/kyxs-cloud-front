@@ -78,4 +78,38 @@ export default [
             };
         },
     },
+    {
+        url: '/api/position/list',
+        type: 'get',
+        response(){
+            return {
+                code: 0,
+                msg: 'success',
+                data: [
+                    {
+                        postName:'高级开发',
+                        deptName:'研发部',
+                        postDesc:'负责项目开发',
+                        postType:'技术岗',
+                        headCount:10,
+                        currentCount:5,
+                        salary:'10000',
+                        postStatus:'90110001',
+                        createTime:'2023-02-11 12:00:00'
+                    },
+                    {
+                        postName:'中级开发',
+                        deptName:'研发部',
+                        postDesc:'负责项目开发',
+                        postType:'技术岗',
+                        headCount:10,
+                        currentCount:20,
+                        salary:'10000',
+                        postStatus:'90110002',
+                        createTime:'2023-02-11 12:00:00'
+                    }
+                ]
+            }
+        }
+    }
 ]

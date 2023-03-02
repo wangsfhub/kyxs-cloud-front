@@ -30,19 +30,11 @@ import {ref,reactive, unref, toRefs} from 'vue'
 import { getOrgTree } from "../api/org";
 export default {
   name: "orgTree",
-  props: {
-    selValue: {
-      type: String,
-      default: '',
-    }
-  },
   setup(props, {emit}) {
     const data = reactive({
       treeData: [],
       checkedName: '',
-      selValue: ''
     });
-    data.selValue = data.selValue
     const buttonRef = ref()
     const popoverRef = ref()
     const onClickOutside = () => {
@@ -60,9 +52,7 @@ export default {
     onMounted(()=>{
       getOrgTree().then((res) => {
         data.treeData = res.data;
-        if(data.selValue==''){
-          data.checkedName = res.data[0].label
-        }
+        data.checkedName = res.data[0].label
       });
     })
     return {
