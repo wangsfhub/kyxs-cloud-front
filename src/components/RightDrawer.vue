@@ -12,7 +12,7 @@
     </template>
     <template #default>
       <div>
-        3343343344
+        <slot name="default"></slot>
       </div>
     </template>
     <template #footer>
@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+  import {reactive, ref} from 'vue'
 defineProps({
   title: {
     type: String,
@@ -56,7 +56,7 @@ defineExpose({
 })
 
 const confirm = () => {
-  emit('submit', '111')
+  emit('submit', '')
 }
 const handleClose = (done) => {
   isClose()

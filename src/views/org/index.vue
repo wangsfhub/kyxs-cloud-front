@@ -59,7 +59,7 @@
           </template>
       </el-table-column>
     </el-table>
-    <RightDrawer ref="drawer" title="新增" @submit=""></RightDrawer>
+    <OrgEdit ref="orgEdit"></OrgEdit>
   </div>
 </template>
 <script setup>
@@ -72,6 +72,7 @@
 //   children?: User[]
 // }
 //
+import OrgEdit from './drawer/OrgEdit.vue'
 import { ElMessage } from "element-plus";
 import {getOrgList} from "../../api/org";
 import {ref, nextTick, getCurrentInstance, computed} from "vue";
@@ -81,10 +82,10 @@ const store = useStore();
 const context = getCurrentInstance()?.appContext.config.globalProperties;
 const func = context?.$func;
 
-const drawer = ref(null)
+const orgEdit = ref(null)
 const add = () =>{
   nextTick(() => {
-    drawer.value.isOpen()
+    orgEdit.value.init({})
   })
 }
 //表头筛选数组对象

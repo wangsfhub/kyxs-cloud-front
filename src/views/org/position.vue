@@ -13,18 +13,19 @@
         <MycTable :tableData="tableData" :columObj="columObj" :pageObj="pageObj" @switchChange="switchChange" @editInputBlur="editInputBlur" @rowClick="rowClick"
                   @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange">
         </MycTable>
-        <RightDrawer ref="drawer" title="新增" @submit="submit"></RightDrawer>
+        <PostEdit ref="postEdit"></PostEdit>
     </div>
 </template>
 <script setup>
-    import { ref,reactive,getCurrentInstance } from 'vue'
+    import PostEdit from './drawer/PostEdit.vue'
+    import {ref, reactive, getCurrentInstance, nextTick} from 'vue'
     import PageHeader from "@components/PageHeader.vue";
     import MycTable from "@components/MycTable.vue";
     import OrgTree from "@components/OrgTree.vue";
     import RightDrawer from "@components/RightDrawer.vue";
     import { ElLoading,ElMessage } from "element-plus"
     import {getPostList} from "../../api/org";
-    const drawer = ref(null)
+    const postEdit = ref(null)
     let { proxy } = getCurrentInstance();
     let pageObj = reactive({ //分页对象
         position: "right", //分页组件位置  center/right/left
@@ -176,7 +177,9 @@
         })
     }
     const add = () =>{
-        drawer.value.isOpen()
+        nextTick(() => {
+            postEdit.value.init()
+        })
     }
     const rowOperation = (row, $index) =>{
         console.log(row, $index)
