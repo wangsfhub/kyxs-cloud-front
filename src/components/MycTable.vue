@@ -92,10 +92,9 @@ const tag = computed(() => {
 });
 onMounted(()=>{
   if(autoHeight.value){
-    topHeight.value = store.getters.pageHeaderHeight + 1
+    topHeight.value = store.getters['user/pageHeaderHeight']
   }
 });
-const viewUrl = '';
 const emit = defineEmits(['switchChange','rowClick','editInputBlur','handleSizeChange','handleCurrentChange']);
 // switchChange调用
 const  switchChange = (row, $index, prop) => {

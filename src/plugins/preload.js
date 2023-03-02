@@ -58,6 +58,16 @@ All.prototype = {
         });
         arr.splice(includesIndex, 1);
     },
+    //表头刷选格式化
+    filteItemsChecked(arr, elem, key = 'column'){
+        var isIncludes = this.toggleClass(arr, elem, key);
+        if(isIncludes){
+            this.removeEle(arr, elem, key)
+        }
+        if(elem.value!=''){
+            arr.push(elem);
+        }
+    },
     setApproverStr(nodeConfig) {
         if (nodeConfig.settype == 1) {
             if (nodeConfig.nodeUserList&&nodeConfig.nodeUserList.length == 1) {

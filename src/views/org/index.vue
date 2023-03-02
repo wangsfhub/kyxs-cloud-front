@@ -28,14 +28,19 @@
         row-key="id"
         :stripe="false" :border="false" :fit="true" :show-header="true"
         :highlight-current-row="true"
+        :style="'height: calc(100vh - 60px - '+(tag?55:0)+'px - 20px - '+topHeight+'px)'"
     >
       <el-table-column prop="orgName" label="组织名称" width="200" filter>
         <template #header="{ column, $index }">
-              <table-header-filter :column="column" @filterChange="filterChange"/>
+              <table-header-filter :column="column" :filters.sync="filters" :filterObj="{type:'input',operator:'like'}" @filterChange="filterChange"/>
         </template>
       </el-table-column>
       <el-table-column prop="orgNo" label="组织编号" align="center"/>
-      <el-table-column prop="orgType" label="组织类别" align="center"/>
+      <el-table-column prop="orgType" label="组织类别"  align="center">
+        <template #header="{ column, $index }">
+          <table-header-filter :column="column" :filterObj="{type:'select',operator:'=',setId:'9001'}" @filterChange="filterChange"/>
+        </template>
+      </el-table-column>
       <el-table-column prop="chargePerson" label="负责人" align="center"/>
       <el-table-column prop="headCount" label="人员编制" width="110" align="center" sortable/>
       <el-table-column prop="currentCount" label="当前人数" width="110" align="center" sortable/>
@@ -69,18 +74,34 @@
 //
 import { ElMessage } from "element-plus";
 import {getOrgList} from "../../api/org";
-import {ref,nextTick} from "vue";
+import {ref, nextTick, getCurrentInstance, computed} from "vue";
+import { useStore } from 'vuex';
+const store = useStore();
+
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+const func = context?.$func;
+
 const drawer = ref(null)
 const add = () =>{
   nextTick(() => {
     drawer.value.isOpen()
   })
 }
+//表头筛选数组对象
+const filters = ref([]);
+
 const setOrgId = (orgId)=>{
   getOrgList(orgId).then((res)=>{
     tableData.value = res.data
   })
 }
+//是否显示页签
+const tag = computed(() => {
+  return store.getters['setting/tag'];
+});
+const topHeight = computed(() => {
+  return store.getters['user/pageHeaderHeight'];
+});
 const handleCommand = (command) => {
   switch (command) {
     case 'sort':
@@ -103,8 +124,10 @@ const handleEdit = ()=>{
 
 }
 //自定义搜索回调
-const filterChange = (val)=>{
-  ElMessage.success(val)
+const filterChange = (item)=>{
+  //格式化数据，判断存在与否以及空的情况移除
+  func.filteItemsChecked(filters.value, item)
+  ElMessage.success(JSON.stringify(filters.value))
 }
 const tableData = [
   {
