@@ -2,12 +2,12 @@ import axios from 'axios'
 
 import { netConfig } from '@/config/net.config'
 const {
-    baseURL,
-    contentType,
-    requestTimeout,
-    successCode,
-    tokenName, } =
-    netConfig;
+        baseURL,
+        contentType,
+        requestTimeout,
+        successCode,
+        tokenName
+    } = netConfig;
 import store from '@/store'
 import qs from 'qs'
 import router from '@/router'
@@ -52,7 +52,7 @@ const instance = axios.create({
 instance.interceptors.request.use(
     (config) => {
         if (store.getters['user/accessToken'])
-            config.headers[tokenName] = store.getters['user/accessToken']
+            config.headers[tokenName] = 'Bearer '+store.getters['user/accessToken']
         if (
             config.data &&
             config.headers['Content-Type'] ===

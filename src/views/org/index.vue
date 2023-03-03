@@ -54,12 +54,12 @@
       <el-table-column prop="createTime" label="创建时间" width="160" align="center" sortable/>
       <el-table-column fixed="right" prop="operates" label="操作" align="center" width="120">
           <template #default="{row}">
-            <el-button link type="primary" size="small" @click="handleEdit">编辑</el-button>
+            <el-button link type="primary" size="small" @click="handleEdit(row)">编辑</el-button>
             <el-button link type="primary" size="small">添加下级</el-button>
           </template>
       </el-table-column>
     </el-table>
-    <OrgEdit ref="orgEdit"></OrgEdit>
+    <OrgEdit ref="orgEdit" @refresh="query"></OrgEdit>
   </div>
 </template>
 <script setup>
@@ -92,6 +92,10 @@ const add = () =>{
 const filters = ref([]);
 
 const setOrgId = (orgId)=>{
+  query(orgId)
+}
+//加载数据
+const query = (orgId) =>{
   getOrgList(orgId).then((res)=>{
     tableData.value = res.data
   })
@@ -121,8 +125,10 @@ const handleCommand = (command) => {
       break;
   }
 };
-const handleEdit = ()=>{
-
+const handleEdit = (row)=>{
+  nextTick(() => {
+    orgEdit.value.init(row)
+  })
 }
 //自定义搜索回调
 const filterChange = (item)=>{

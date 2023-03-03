@@ -23,5 +23,7 @@ export const netConfig = {
     invalidCode: -1,
     //无权限code
     noPermissionCode: -1,
+    //token名称
+    tokenName: 'Authorization'
 };
 

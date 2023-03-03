@@ -13,7 +13,7 @@
         <MycTable :tableData="tableData" :columObj="columObj" :pageObj="pageObj" @switchChange="switchChange" @editInputBlur="editInputBlur" @rowClick="rowClick"
                   @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange">
         </MycTable>
-        <PostEdit ref="postEdit"></PostEdit>
+        <PostEdit ref="postEdit"  @refresh="query"></PostEdit>
     </div>
 </template>
 <script setup>
@@ -39,11 +39,13 @@
     //加载表哥数据
     let tableData = ref([]);
     onMounted(()=>{
-        getPostList(pageObj.pageData).then((res)=>{
-            tableData.value = res.data
-        })
+      query()
     })
-
+    const query = ()=>{
+      getPostList(pageObj.pageData).then((res)=>{
+        tableData.value = res.data
+      })
+    }
     let columObj = reactive({
         // 选择框
         selection: false,
@@ -153,9 +155,11 @@
                   type: "primary",
                   label: "编辑",
                   icon: "",
-                  buttonClick: proxy.rowOperation,
+                  buttonClick: (row, $index) => {
+                    edit(row,$index)
+                  },
                   isShow: (row, $index) => {
-                      return true;
+                    return true;
                   }
               }, {
                   type: "primary",
@@ -181,8 +185,10 @@
             postEdit.value.init()
         })
     }
-    const rowOperation = (row, $index) =>{
+    //编辑
+    const edit = (row, $index) =>{
         console.log(row, $index)
+        postEdit.value.init(row)
     }
     const switchChange = (row, $index, prop) => {
         console.log(row, $index, prop)

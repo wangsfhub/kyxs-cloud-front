@@ -111,5 +111,27 @@ export default [
                 ]
             }
         }
+    },
+    {
+        url: '/api/org/save',
+        type: 'post',
+        response(){
+            return {
+                code: 0,
+                msg: 'success',
+                data: null
+            }
+        }
+    },
+    {
+        url: '/api/post/save',
+        type: 'post',
+        response(){
+            return {
+                code: 0,
+                msg: 'success',
+                data: null
+            }
+        }
     }
 ]

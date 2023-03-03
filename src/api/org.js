@@ -24,6 +24,20 @@ export const getPostList = async (deptId) => {
         data:{'deptId':deptId}
     });
 };
-
-
+//保存部门信息
+export const saveOrgInfo = async (data) => {
+    return request({
+        url: '/org/save',
+        method: 'post',
+        data:data
+    });
+};
+//保存岗位信息
+export const savePostInfo = async (data) => {
+    return request({
+        url: '/post/save',
+        method: 'post',
+        data:data
+    });
+};
 

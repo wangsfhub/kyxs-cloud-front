@@ -112,8 +112,7 @@
         dialogVisible.value = false
     }
     const submit = ()=>{
-      emit('submit','');
-      ElMessage.success('选中的数据是：'+JSON.stringify(checkedEmployessList.value));
+      emit('submit',checkedEmployessList.value);
     }
     defineExpose({
         isOpen,

@@ -68,6 +68,25 @@ All.prototype = {
             arr.push(elem);
         }
     },
+    //同名属性赋值
+    copyProperties(elem1, elem2){
+        Object.keys(elem1).forEach((key) => {
+            elem1[key] = elem2[key] || elem1[key]
+        });
+    },
+    //属性逗号拼接返回
+    joinArrayProperties(arr, key='id'){
+        if(arr){
+            let keys = []
+            arr.forEach(elem => {
+                if(keys.indexOf(elem[key])==-1){
+                    keys.push(elem[key])
+                }
+            })
+            return keys.join(",")
+        }
+        return ''
+    },
     setApproverStr(nodeConfig) {
         if (nodeConfig.settype == 1) {
             if (nodeConfig.nodeUserList&&nodeConfig.nodeUserList.length == 1) {

@@ -8,6 +8,7 @@ import getPageTitle from '@/utils/pageTitle'
 import {
     setting
 } from '@/config/setting.config'
+const { authentication, loginInterception, progressBar, routesWhiteList, recordRoute } = setting;
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 NProgress.configure({
@@ -19,60 +20,61 @@ NProgress.configure({
 })
 router.beforeEach(async (to, from, next) => {
     // 每次切换页面时，调用进度条
-    NProgress.start();
+    if (progressBar) NProgress.start();
     let hasToken = store.getters['user/accessToken']
     if (!setting.loginInterception) hasToken = true
     if (hasToken) {
         if (to.path === '/login') {
-            next({ path: '/' })
+            next({ path: '/' });
+            if (progressBar) NProgress.done();
         } else {
-            const hasRoles = false
-            if (hasRoles) {
-                next()
+            const hasPermissions =
+                store.getters['user/permissions'] && store.getters['user/permissions'].length > 0;
+            if (hasPermissions) {
+                next();
             } else {
                 try {
-                    if (setting.loginInterception) {
-                        await store.dispatch('user/getUserInfo')
+                    let permissions;
+                    if (!loginInterception) {
+                        //settings.js loginInterception为false时，创建虚拟权限
+                        await store.dispatch('user/setPermissions', ['admin']);
+                        permissions = ['admin'];
                     } else {
-                        //loginInterception为false（关闭登录拦截时）时，创建虚拟角色
-                        await store.dispatch('user/setVirtualRoles')
+                        permissions = await store.dispatch('user/getUserInfo');
                     }
 
-                    let accessRoutes = []
-                    if (setting.authentication === 'intelligence') {
-                        accessRoutes = await store.dispatch('routes/setRoutes')
-                    } else if (setting.authentication === 'all') {
-                        accessRoutes = await store.dispatch('routes/setAllRoutes')
+                    let accessRoutes = [];
+                    if (authentication === 'intelligence') {
+                        accessRoutes = await store.dispatch('routes/setRoutes', permissions);
+                    } else if (authentication === 'all') {
+                        accessRoutes = await store.dispatch('routes/setAllRoutes');
                     }
                     accessRoutes.forEach((item) => {
-                        router.addRoute(item)
-                    })
-                    next();
-                   // next({ ...to, replace: true })
+                        router.addRoute(item);
+                    });
+                    next({ ...to, replace: true });
                 } catch {
-                    await store.dispatch('user/resetAll')
-                    if (setting.recordRoute)
-                        next({
-                            path: '/login',
-                            query: { redirect: to.path },
-                            replace: true,
-                        })
-                    else next({ path: '/login', replace: true })
+                    await store.dispatch('user/resetAccessToken');
+                    if (progressBar) NProgress.done();
                 }
             }
         }
     } else {
-        if (setting.routesWhiteList.indexOf(to.path) !== -1) {
-            next()
+        // 免登录路由
+        if (routesWhiteList.indexOf(to.path) !== -1) {
+            next();
         } else {
-            if (setting.recordRoute)
-                next({ path: '/login', query: { redirect: to.path }, replace: true })
-            else next({ path: '/login', replace: true })
+            if (recordRoute) {
+                next(`/login?redirect=${to.path}`);
+            } else {
+                next('/login');
+            }
+            if (progressBar) NProgress.done();
         }
     }
 })
 router.afterEach((to) => {
     // 在即将进入新的页面组件前，关闭掉进度条
-    NProgress.done()
+    if (progressBar) NProgress.done()
     document.title = getPageTitle(to.meta.title)
 })

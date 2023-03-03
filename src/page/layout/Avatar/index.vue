@@ -24,7 +24,7 @@
 </script>
 
 <script setup>
-  import { ref } from 'vue';
+  import { ref,computed } from 'vue';
   import { useStore } from 'vuex';
   import { ElMessageBox } from 'element-plus';
   import { setting } from '@/config/setting.config';
@@ -32,7 +32,6 @@
 
   const { title, recordRoute } = setting;
   //const avatar = ref('@assets/user-avatar.gif');
-  const userName = ref('wangsf');
   const store = useStore();
   const router = useRouter();
 
@@ -42,7 +41,9 @@
       default: '#666',
     },
   });
-
+  const userName = computed(()=>{
+    return store.getters['user/username'];
+  })
   const handleCommand = (command) => {
     switch (command) {
       case 'logout':
