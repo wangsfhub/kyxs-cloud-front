@@ -1,7 +1,7 @@
 <!--自定义表头筛选组件-->
 <template>
     <span style="display:flex;align-items:center;">
-      <span :style="filterValue!=''?'color:var(--them-color)':''">{{column.label}}</span>
+      <span :style="filterValue!=''?'color:var(--theme-color)':''">{{column.label}}</span>
       <el-popover
           placement="bottom"
           :width="200"

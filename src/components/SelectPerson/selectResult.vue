@@ -9,21 +9,21 @@
             <li v-for="item in data" :key="item.id">
                 <img src="@/assets/images/icon_role.png">
                 <span>{{item.roleName}}</span>
-                <icon-close-one class="close" @click="cancel(item)"/>
+                <el-icon class="close"><i-ep-circle-close-filled @click="cancel(item)"></i-ep-circle-close-filled></el-icon>
             </li>
           </template>
           <template v-if="type === 'department'">
             <li v-for="item in data" :key="item.id">
                 <img src="@/assets/images/icon_file.png">
                 <span>{{item.departmentName}}</span>
-                <icon-close-one class="close" @click="cancel(item)"/>
+                <el-icon class="close"><i-ep-circle-close-filled @click="cancel(item)"></i-ep-circle-close-filled></el-icon>
             </li>
           </template>
           <template v-if="type === 'employee'">
             <li v-for="item in data" :key="item.id">
                 <img src="@/assets/images/icon_people.png">
                 <span>{{item.employeeName}}</span>
-                <icon-close-one class="close" @click="cancel(item)"/>
+                <el-icon class="close"><i-ep-circle-close-filled @click="cancel(item)"></i-ep-circle-close-filled></el-icon>
             </li>
           </template>
         </template>
@@ -61,7 +61,7 @@ export default {
 
 <style lang="less">
 .select-result {
-  width: 256px;
+  width: 275px;
   height: 100%;
   font-size: 12px;
   float: left;
@@ -87,7 +87,7 @@ export default {
         float: right;
         margin-top: 2px;
         font-size: 14px;
-        color: #ff6700;
+        color: #666;
       }
     }
   }
@@ -97,7 +97,6 @@ export default {
     padding-right: 20px;
     line-height: 37px;
     border-bottom: 1px solid #f2f2f2;
-
     a {
       float: right;
     }

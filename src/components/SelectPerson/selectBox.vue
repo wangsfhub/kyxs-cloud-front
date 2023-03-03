@@ -16,9 +16,10 @@
           <a v-if="elem.isDepartment"
             :class="elem.isActive(item) && 'active'"
             @click="elem.change(item)">
-            <img src="@/assets/images/icon_file.png">{{item.departmentName}}</a>
-            <a v-else><img src="@/assets/images/icon_file.png">{{item.departmentName}}</a>
-            <i @click="elem.next(item)">下级</i>
+            <img src="@/assets/images/icon_file.png">{{item.departmentName}}
+          </a>
+          <a v-else><img src="@/assets/images/icon_file.png">{{item.departmentName}}</a>
+          <el-icon><i-ep-plus @click="elem.next(item)"></i-ep-plus></el-icon>
         </li>
       </template>
       <template v-if="elem.type === 'employee'">
@@ -47,26 +48,24 @@ export default {
 .select-box {
   height: 320px;
   overflow-y: auto;
-
   li {
     padding: 5px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    a{
+      display: flex;
+      align-items: center;
+    }
     i {
-      float: right;
-      padding-left: 24px;
-      padding-right: 10px;
-      color: #3195f8;
       font-size: 12px;
       cursor: pointer;
-      background: url(../../assets/images/next_level_active.png) no-repeat 10px center;
-      border-left: 1px solid rgb(238, 238, 238);
     }
-
-    a.active+i {
-      color: rgb(197, 197, 197);
-      background-image: url(../../assets/images/next_level.png);
-      pointer-events: none;
+    i:hover {
+      font-size: 12px;
+      cursor: pointer;
+      color: var(--theme-color);
     }
-
     img {
       width: 14px;
       vertical-align: middle;

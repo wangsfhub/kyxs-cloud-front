@@ -50,6 +50,7 @@ declare module '@vue/runtime-core' {
     ErrorPage: typeof import('./src/components/ErrorPage/index.vue')['default']
     IEpAdd: typeof import('~icons/ep/add')['default']
     IEpArrowDown: typeof import('~icons/ep/arrow-down')['default']
+    IEpCircleCloseFilled: typeof import('~icons/ep/circle-close-filled')['default']
     IEpPlus: typeof import('~icons/ep/plus')['default']
     MycTable: typeof import('./src/components/MycTable.vue')['default']
     OrgTree: typeof import('./src/components/OrgTree.vue')['default']
