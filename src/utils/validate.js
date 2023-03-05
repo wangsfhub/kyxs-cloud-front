@@ -44,3 +44,14 @@ export const checkIdCard = (rule,value,callback) => {
         callback()
     }
 }
+/**
+ * 校验数字字符串
+ */
+export const checkChar = (rule,value,callback) => {
+    let regExp = /^[A-Za-z0-9]{3,20}$/
+    if (value && !regExp.test(value)) {
+        callback(new Error('请输入数字字符组合，长度在3-20字符'))
+    }else{
+        callback()
+    }
+}

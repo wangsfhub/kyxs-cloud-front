@@ -3,126 +3,149 @@
     <PageHeader>
       <template #left>
         <OrgTree @getOrgId="setOrgId"/>
-        <SelectCode setId="9001" @getValue="getValue" :multiple="false" placeholder="请选择状态"/>
-        <SelectOrg :multiple="false" @getOrgId="getDeptId" placeholder="请选择部门"/>
-        <el-button type="primary" @click="selectPerson">选择人员</el-button>
-        <el-button type="primary" @click="selectRole">选择角色</el-button>
       </template>
       <template #right>
         <el-button type="primary" @click="add">新增</el-button>
-        <el-button>导出</el-button>
+        <el-button type="primary">岗位架构图</el-button>
+        <el-button type="primary">导出</el-button>
       </template>
     </PageHeader>
-    <MycTable :tableData="tableData" :columObj="columObj" :pageObj="pageObj" @switchChange="switchChange" @editInputBlur="editInputBlur" @rowClick="rowClick"
+    <MycTable :tableData="tableData" :columObj="columObj" :pageObj="pageObj" @filterChange="filterChange" @switchChange="switchChange" @editInputBlur="editInputBlur" @rowClick="rowClick"
               @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange">
     </MycTable>
+    <PostEdit ref="postEdit"  @refresh="query"></PostEdit>
   </div>
-  <RightDrawer ref="drawer" title="新增" @submit="submit"></RightDrawer>
-  <SelectPerson ref="personDialog" :data.sync="checkedList" @submit="submit"></SelectPerson>
-  <SelectRole ref="roleDialog" :data.sync="checkedList" @submit="submit"></SelectRole>
 </template>
 <script setup>
-import { ref,reactive,getCurrentInstance } from 'vue'
+import PostEdit from './drawer/EmpEdit.vue'
+import {ref, reactive, getCurrentInstance, nextTick} from 'vue'
 import PageHeader from "@components/PageHeader.vue";
 import MycTable from "@components/MycTable.vue";
 import OrgTree from "@components/OrgTree.vue";
-import RightDrawer from "@components/RightDrawer.vue";
-import SelectCode from "@components/SelectCode.vue"
-import SelectOrg from "@components/SelectOrg.vue"
-import SelectPerson from "@components/SelectPerson.vue"
-import SelectRole from "@components/SelectRole.vue"
 import { ElLoading,ElMessage } from "element-plus"
-import {getOrgList} from "../../api/org/dept";
-const drawer = ref(null)
-const personDialog = ref(null)
-const roleDialog = ref(null)
+import {getPostList,updatePostStatus,deleteById} from "../../api/org/position";
+const context = getCurrentInstance()?.appContext.config.globalProperties;
+const func = context?.$func;
+const postEdit = ref(null)
 let { proxy } = getCurrentInstance();
 let pageObj = reactive({ //分页对象
   position: "right", //分页组件位置  center/right/left
-  total: 100,
   pageData: {
-    page: 1,
-    size: 10,
-    superId: ''
+    total: 0,
+    current: 1,
+    size: 20,
+    filterItems:[]
   }
 });
 //加载表哥数据
 let tableData = ref([]);
 onMounted(()=>{
-  getOrgList(pageObj.pageData).then((res)=>{
-    tableData.value = res.data
-  })
+  query()
 })
-
+const query = ()=>{
+  getPostList(pageObj.pageData).then((res)=>{
+    tableData.value = res.data.records;
+    pageObj.pageData.total = res.data.total
+  })
+}
 let columObj = reactive({
   // 选择框
-  selection: true,
-  // 选择框根据条件是否可选
-  selectable: (row, index) => {
-    if (row.switchs) {
-      return true;
-    }
-  },
+  selection: false,
   lazy: "true",
   //column列,columType(列类型,可选text(默认为普通文字模式),input(input可编辑框),switch(switch开关),image(图片),operation(操作按钮))
   //prop(参数),label(列名),width(宽度),align(对齐方式),sortable(是否支持排序)
   columnData: [{
     text: true,
-    prop: "date",
-    label: "默认样式",
+    filter: {type:'input',operator:'like'},
+    prop: "postName",
+    label: "岗位名称",
     width: "",
-    align: "center",
+    align: "center"
   }, {
     text: true,
-    prop: "id",
-    label: "可以排序",
+    prop: "deptName",
+    label: "所属部门",
     width: "",
     align: "center",
-    sortable: true, //开启排序
-
   },
     {
-      status: true,
-      prop: "objmsg",
-      label: "obj类型（mesage）",
-      width: "",
-      align: "center",
-      sortable: false,
-    },
-    {
-      ownDefined: true,
-      prop: "address",
-      label: "自定义返回内容",
-      width: "",
-      align: "center",
-      sortable: false,
-      ownDefinedReturn: (row, $index) => {
-        return row.address
-      }
-    },
-    {
-      switch: true,
-      prop: "switchs",
-      label: "switch开关",
-      width: "",
-      align: "center",
-      openText: "打开",
-      closeText: "关闭",
-      sortable: false,
-    },
-    {
-      image: true,
-      prop: "img",
-      label: "图片",
+      code: true,
+      setId:'6',
+      prop: "postType",
+      label: "岗位类别",
       width: "",
       align: "center",
       sortable: false,
     },
     {
       text: true,
-      editRow: null,
-      prop: "name",
-      label: "点击可编辑",
+      prop: "headCount",
+      label: "人员编制",
+      width: "110",
+      align: "center",
+      sortable: true,
+    },
+    {
+      text: true,
+      prop: "currentCount",
+      label: "当前人数",
+      width: "110",
+      align: "center",
+      sortable: true,
+    },
+    {
+      ownDefined: true,
+      definedType:'tag',
+      prop: "",
+      label: "是否超编",
+      width: "",
+      align: "center",
+      sortable: false,
+      ownDefinedReturn: (row, $index) => {
+        if(row.headCount==0){
+          return null;
+        }
+        else if(row.headCount<row.currentCount){
+          return {value:'超编',type:'danger'};
+        }
+        else if(row.headCount==row.currentCount){
+          return {value:'满编',type:'success'}
+        }
+        else{
+          return {value:'缺编',type:'warning'}
+        }
+      }
+    },
+    {
+      switch: true,
+      activeValue:"1",
+      inactiveValue:"0",
+      prop: "postStatus",
+      label: "岗位状态",
+      width: "",
+      align: "center",
+      sortable: false,
+    },
+    {
+      text: true,
+      prop: "postSalary",
+      label: "岗位工资",
+      width: "",
+      align: "center",
+      sortable: false,
+    },
+    {
+      text: true,
+      prop: "postDesc",
+      label: "岗位描述",
+      width: "",
+      align: "center",
+      sortable: false,
+    },
+    {
+      text: true,
+      prop: "createTime",
+      label: "创建时间",
       width: "",
       align: "center",
       sortable: false,
@@ -131,56 +154,82 @@ let columObj = reactive({
     {
       isOperation: true,
       label: "操作",
-      width: "180",
+      width: "120",
       align: "center",
       sortable: false,
+      fixed: 'right',
       operation: [{
-        type: "text",
+        type: "primary",
         label: "编辑",
         icon: "",
-        color: 'red',
-        buttonClick: proxy.rowOperation,
-        isShow: (row, $index) => {
-          return true;
-        }
-      }, {
-        type: "text",
-        label: "删除",
-        icon: "",
-        color: 'blue',
-        buttonClick:undefined,
+        buttonClick: (row, $index) => {
+          edit(row,$index)
+        },
         isShow: (row, $index) => {
           return true;
         }
       }, {
         type: "primary",
-        label: "查看",
+        label: "删除",
         icon: "",
-        color: '',
-        buttonClick:undefined,
+        buttonClick:(row, $index) => {
+          del(row,$index)
+        },
         isShow: (row, $index) => {
           return true;
         }
       }]
     },
-
   ],
 });
 const setOrgId = (orgId)=>{
-  pageObj.pageData.page = 1;
-  pageObj.pageData.superId = orgId
-  getOrgList(pageObj.pageData).then((res)=>{
-    tableData.value = res.data
-  })
+  pageObj.pageData.current = 1;
+  let currentFilterItem = {column:'deptId',operator:'=',value:orgId};
+  func.filteItemsChecked(pageObj.pageData.filterItems, currentFilterItem)
+  query()
+}
+//自定义搜索回调
+const filterChange = (item)=>{
+  //格式化数据
+  func.filteItemsChecked(pageObj.pageData.filterItems, item)
+  pageObj.pageData.current = 1;
+  query()
 }
 const add = () =>{
-  drawer.value.isOpen()
+  nextTick(() => {
+    postEdit.value.init()
+  })
 }
-const rowOperation = (row, $index) =>{
+//编辑
+const edit = (row, $index) =>{
   console.log(row, $index)
+  postEdit.value.init(row)
 }
+//删除
+const del = (row, $index) =>{
+  deleteById(row.id).then((res)=>{
+    if(res.code==0){
+      ElMessage.success('删除成功')
+      pageObj.pageData.current = 1;
+      query();
+    }
+  })
+}
+//修改启用禁用状态
 const switchChange = (row, $index, prop) => {
-  console.log(row, $index, prop)
+  console.log(row, $index, prop);
+  let update = {};
+  update[prop] = row[prop]
+  update['id'] = row['id']
+  updatePostStatus(update).then((res)=>{
+    if(res.code==0){
+      if(row[prop]=='1'){
+        ElMessage.success('启用成功')
+      }else if(row[prop]=='0'){
+        ElMessage.success('禁用成功')
+      }
+    }
+  })
 };
 const rowClick = (row, column)=> {
   // 点击行触发，编辑点击的所在列，排除selection选择框
@@ -193,31 +242,14 @@ const editInputBlur = (row, $index, prop, columIndex) =>{
 };
 //页码变化
 const handleCurrentChange = (e)=> {
-  pageObj.pageData.page = e;
+  pageObj.pageData.current = e;
+  query();
 };
 //条数变化
 const handleSizeChange = (e)=>{
   pageObj.pageData.size = e;
-  pageObj.pageData.page = 1;
-}
-const submit = ()=>{
-  // ElLoading.service({
-  //   text:'提交中...'
-  // })
-}
-const getValue = (val) =>{
-  ElMessage.success("选中的值："+val);
-}
-const getDeptId = (val) =>{
-  ElMessage.success("选中的值："+val);
-}
-
-const checkedList = ref([])
-const selectPerson = ()=>{
-  personDialog.value.isOpen()
-}
-const selectRole = ()=>{
-  roleDialog.value.isOpen()
+  pageObj.pageData.current = 1;
+  query();
 }
 </script>
 <style lang="scss">
