@@ -23,3 +23,10 @@ export const getEmployees = async (data) => {
         data: data
     });
 };
+export const getCodeItems = async () => {
+    return request({
+        url: '/code/items',
+        method: 'get',
+        data: {}
+    });
+};

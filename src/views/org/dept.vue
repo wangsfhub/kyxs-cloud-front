@@ -30,23 +30,27 @@
         :highlight-current-row="true"
         :style="'height: calc(100vh - 60px - '+(tag?55:0)+'px - 20px - '+topHeight+'px)'"
     >
-      <el-table-column prop="orgName" label="组织名称" width="200" filter>
+      <el-table-column prop="deptName" label="组织名称" width="200" filter>
         <template #header="{ column, $index }">
               <table-header-filter :column="column" :filters.sync="filters" :filterObj="{type:'input',operator:'like'}" @filterChange="filterChange"/>
         </template>
       </el-table-column>
-      <el-table-column prop="orgNo" label="组织编号" align="center"/>
-      <el-table-column prop="orgType" label="组织类别"  align="center">
+      <el-table-column prop="deptNo" label="组织编号" align="center"/>
+      <el-table-column prop="deptType" label="组织类别"  align="center">
         <template #header="{ column, $index }">
-          <table-header-filter :column="column" :filterObj="{type:'select',operator:'=',setId:'9001'}" @filterChange="filterChange"/>
+          <table-header-filter :column="column" :filterObj="{type:'select',operator:'=',setId:'11'}" @filterChange="filterChange"/>
+        </template>
+        <template #default="{ row }">
+            <span>{{translateCode('11',row.deptType)}}</span>
         </template>
       </el-table-column>
-      <el-table-column prop="chargePerson" label="负责人" align="center"/>
+      <el-table-column prop="leaderName" label="负责人" align="center"/>
       <el-table-column prop="headCount" label="人员编制" width="110" align="center" sortable/>
       <el-table-column prop="currentCount" label="当前人数" width="110" align="center" sortable/>
       <el-table-column label="是否超编" align="center">
         <template #default="{row}">
-          <el-tag type="danger" v-if="row.currentCount>row.headCount">超编</el-tag>
+          <span v-if="row.headCount==0">—</span>
+          <el-tag type="danger" v-else-if="row.currentCount>row.headCount">超编</el-tag>
           <el-tag type="success" v-else-if="row.currentCount==row.headCount">满编</el-tag>
           <el-tag type="warning" v-else>缺编</el-tag>
         </template>
@@ -55,7 +59,7 @@
       <el-table-column fixed="right" prop="operates" label="操作" align="center" width="120">
           <template #default="{row}">
             <el-button link type="primary" size="small" @click="handleEdit(row)">编辑</el-button>
-            <el-button link type="primary" size="small">添加下级</el-button>
+            <el-button link type="primary" size="small" @click="handleAddNext(row)">添加下级</el-button>
           </template>
       </el-table-column>
     </el-table>
@@ -74,8 +78,9 @@
 //
 import OrgEdit from './drawer/OrgEdit.vue'
 import { ElMessage } from "element-plus";
-import {getOrgList} from "../../api/org";
-import {ref, nextTick, getCurrentInstance, computed} from "vue";
+import {getOrgList} from "../../api/org/dept";
+import {translateCode} from "../../utils/codeItem";
+import {ref, reactive,nextTick, getCurrentInstance, computed} from "vue";
 import { useStore } from 'vuex';
 const store = useStore();
 
@@ -90,13 +95,21 @@ const add = () =>{
 }
 //表头筛选数组对象
 const filters = ref([]);
-
+const filterObj = reactive({
+  superId:-1,
+  deptName:''
+})
 const setOrgId = (orgId)=>{
-  query(orgId)
+  filterObj.superId = orgId
+  query()
 }
+const tableData = ref([])
+onMounted(()=>{
+  query();
+})
 //加载数据
-const query = (orgId) =>{
-  getOrgList(orgId).then((res)=>{
+const query = () =>{
+  getOrgList(filterObj).then((res)=>{
     tableData.value = res.data
   })
 }
@@ -130,64 +143,21 @@ const handleEdit = (row)=>{
     orgEdit.value.init(row)
   })
 }
+const handleAddNext = (row)=>{
+  nextTick(() => {
+    orgEdit.value.addNext(row.id)
+  })
+}
 //自定义搜索回调
 const filterChange = (item)=>{
-  //格式化数据，判断存在与否以及空的情况移除
+  //格式化数据
   func.filteItemsChecked(filters.value, item)
-  ElMessage.success(JSON.stringify(filters.value))
-}
-const tableData = [
-  {
-    id: 1,
-    orgName: '阿里巴巴中国',
-    orgNo: 'A001',
-    orgType: '公司',
-    chargePerson: '张三',
-    headCount: '20',
-    currentCount: '10',
-    createTime:"2023-11-11 12:30:11"
-  },
-  {
-    id: 2,
-    orgName: '研发部',
-    orgNo: 'A002',
-    orgType: '部门',
-    chargePerson: '张三',
-    headCount: '20',
-    currentCount: '20',
-    createTime:"2023-11-11 12:30:11"
-  },
-  {
-    id: 3,
-    orgName: '销售部',
-    orgNo: 'A003',
-    orgType: '部门',
-    chargePerson: '张三',
-    headCount: '20',
-    currentCount: '30',
-    createTime:"2023-11-11 12:30:11",
-    children: [
-      {
-        id: 31,
-        orgName: '销售部1',
-        orgNo: 'A003',
-        orgType: '部门',
-        chargePerson: '张三',
-        headCount: '20',
-        currentCount: '30',
-        createTime:"2023-11-11 12:30:11",
-      },
-      {
-        id: 32,
-        orgName: '销售部2',
-        orgNo: 'A003',
-        orgType: '部门',
-        chargePerson: '张三',
-        headCount: '20',
-        currentCount: '30',
-        createTime:"2023-11-11 12:30:11",
-      },
-    ],
+  if(filters.value){
+    filters.value.forEach(dept =>{
+      filterObj[dept['column']] = dept['value']
+    })
+    query()
   }
-]
+}
+
 </script>

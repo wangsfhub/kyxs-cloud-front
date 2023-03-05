@@ -60,6 +60,7 @@ const confirm = () => {
 }
 const handleClose = (done) => {
   isClose()
+  emit('close', '')
 }
 </script>
 <style scoped>

@@ -10,7 +10,7 @@
                 <el-button type="primary">导出</el-button>
             </template>
         </PageHeader>
-        <MycTable :tableData="tableData" :columObj="columObj" :pageObj="pageObj" @switchChange="switchChange" @editInputBlur="editInputBlur" @rowClick="rowClick"
+        <MycTable :tableData="tableData" :columObj="columObj" :pageObj="pageObj" @filterChange="filterChange" @switchChange="switchChange" @editInputBlur="editInputBlur" @rowClick="rowClick"
                   @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange">
         </MycTable>
         <PostEdit ref="postEdit"  @refresh="query"></PostEdit>
@@ -22,18 +22,19 @@
     import PageHeader from "@components/PageHeader.vue";
     import MycTable from "@components/MycTable.vue";
     import OrgTree from "@components/OrgTree.vue";
-    import RightDrawer from "@components/RightDrawer.vue";
     import { ElLoading,ElMessage } from "element-plus"
-    import {getPostList} from "../../api/org";
+    import {getPostList,updatePostStatus,deleteById} from "../../api/org/position";
+    const context = getCurrentInstance()?.appContext.config.globalProperties;
+    const func = context?.$func;
     const postEdit = ref(null)
     let { proxy } = getCurrentInstance();
     let pageObj = reactive({ //分页对象
         position: "right", //分页组件位置  center/right/left
-        total: 100,
         pageData: {
-            page: 1,
-            size: 10,
-            superId: ''
+            total: 0,
+            current: 1,
+            size: 20,
+            filterItems:[]
         }
     });
     //加载表哥数据
@@ -43,7 +44,8 @@
     })
     const query = ()=>{
       getPostList(pageObj.pageData).then((res)=>{
-        tableData.value = res.data
+        tableData.value = res.data.records;
+        pageObj.pageData.total = res.data.total
       })
     }
     let columObj = reactive({
@@ -54,10 +56,11 @@
         //prop(参数),label(列名),width(宽度),align(对齐方式),sortable(是否支持排序)
         columnData: [{
             text: true,
+            filter: {type:'input',operator:'like'},
             prop: "postName",
             label: "岗位名称",
             width: "",
-            align: "center",
+            align: "center"
         }, {
             text: true,
             prop: "deptName",
@@ -66,7 +69,8 @@
             align: "center",
         },
           {
-              text: true,
+              code: true,
+              setId:'6',
               prop: "postType",
               label: "岗位类别",
               width: "",
@@ -98,21 +102,24 @@
               align: "center",
               sortable: false,
               ownDefinedReturn: (row, $index) => {
-                if(row.headCount>row.currentCount){
-                  return {value:'缺编',type:'warning'};
+                if(row.headCount==0){
+                  return null;
+                }
+                else if(row.headCount<row.currentCount){
+                  return {value:'超编',type:'danger'};
                 }
                 else if(row.headCount==row.currentCount){
                   return {value:'满编',type:'success'}
                 }
                 else{
-                  return {value:'超编',type:'danger'}
+                  return {value:'缺编',type:'warning'}
                 }
               }
           },
           {
               switch: true,
-              activeValue:"90110001",
-              inactiveValue:"90110002",
+              activeValue:"1",
+              inactiveValue:"0",
               prop: "postStatus",
               label: "岗位状态",
               width: "",
@@ -121,7 +128,7 @@
           },
         {
           text: true,
-          prop: "salary",
+          prop: "postSalary",
           label: "岗位工资",
           width: "",
           align: "center",
@@ -165,20 +172,28 @@
                   type: "primary",
                   label: "删除",
                   icon: "",
-                  buttonClick:undefined,
+                  buttonClick:(row, $index) => {
+                    del(row,$index)
+                  },
                   isShow: (row, $index) => {
-                      return true;
+                    return true;
                   }
               }]
           },
         ],
     });
     const setOrgId = (orgId)=>{
-        pageObj.pageData.page = 1;
-        pageObj.pageData.superId = orgId
-        getPostList(pageObj.pageData).then((res)=>{
-            tableData.value = res.data
-        })
+        pageObj.pageData.current = 1;
+        let currentFilterItem = {column:'deptId',operator:'=',value:orgId};
+        func.filteItemsChecked(pageObj.pageData.filterItems, currentFilterItem)
+        query()
+    }
+    //自定义搜索回调
+    const filterChange = (item)=>{
+      //格式化数据
+      func.filteItemsChecked(pageObj.pageData.filterItems, item)
+      pageObj.pageData.current = 1;
+      query()
     }
     const add = () =>{
         nextTick(() => {
@@ -190,8 +205,31 @@
         console.log(row, $index)
         postEdit.value.init(row)
     }
+    //删除
+    const del = (row, $index) =>{
+      deleteById(row.id).then((res)=>{
+        if(res.code==0){
+          ElMessage.success('删除成功')
+          pageObj.pageData.current = 1;
+          query();
+        }
+      })
+    }
+    //修改启用禁用状态
     const switchChange = (row, $index, prop) => {
-        console.log(row, $index, prop)
+        console.log(row, $index, prop);
+        let update = {};
+        update[prop] = row[prop]
+        update['id'] = row['id']
+        updatePostStatus(update).then((res)=>{
+          if(res.code==0){
+            if(row[prop]=='1'){
+              ElMessage.success('启用成功')
+            }else if(row[prop]=='0'){
+              ElMessage.success('禁用成功')
+            }
+          }
+        })
     };
     const rowClick = (row, column)=> {
         // 点击行触发，编辑点击的所在列，排除selection选择框
@@ -204,12 +242,14 @@
     };
     //页码变化
     const handleCurrentChange = (e)=> {
-        pageObj.pageData.page = e;
+        pageObj.pageData.current = e;
+        query();
     };
     //条数变化
     const handleSizeChange = (e)=>{
         pageObj.pageData.size = e;
-        pageObj.pageData.page = 1;
+        pageObj.pageData.current = 1;
+        query();
     }
     const submit = ()=>{
         // ElLoading.service({

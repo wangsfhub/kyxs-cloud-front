@@ -63,11 +63,11 @@ export const asyncRoutes = [
         meta: { title: '组织管理', icon: 'icon-network-tree' },
         children: [
             {
-                path: '/org',
-                name: '组织管理',
-                component: () => import('@/views/org/index.vue'),
+                path: '/dept',
+                name: '部门管理',
+                component: () => import('@/views/org/dept.vue'),
                 meta: {
-                    title: '组织管理',
+                    title: '部门管理',
                     icon: 'icon-network-tree',
                 },
             },

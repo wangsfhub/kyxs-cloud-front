@@ -19,7 +19,7 @@
       :width="300"
   >
     <template #reference>
-      <el-button style="margin-right: 16px">Click to activate</el-button>
+
     </template>
     <el-tree :data="treeData" :props="defaultProps" @node-click="handleNodeClick" />
   </el-popover>
@@ -27,7 +27,7 @@
 
 <script>
 import {ref,reactive, unref, toRefs} from 'vue'
-import { getOrgTree } from "../api/org";
+import { getOrgTree } from "../api/org/dept";
 export default {
   name: "orgTree",
   setup(props, {emit}) {
@@ -41,18 +41,20 @@ export default {
       unref(popoverRef).popperRef?.delayHide?.()
     }
     const handleNodeClick = (node) => {
-      data.checkedName = node.label
-      emit('getOrgId',node.value);
+      data.checkedName = node.deptName
+      //由于筛选时，选择顶级公司意味着，不带条件查询，因此再选择顶级时，返回的机构ID为''
+      emit('getOrgId',node.superId==-1?'':node.id);
       console.log(node)
     }
     const defaultProps = {
+      value:'id',
       children: 'children',
-      label: 'label',
+      label: 'deptName',
     }
     onMounted(()=>{
       getOrgTree().then((res) => {
         data.treeData = res.data;
-        data.checkedName = res.data[0].label
+        data.checkedName = res.data[0].deptName
       });
     })
     return {

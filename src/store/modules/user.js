@@ -1,4 +1,5 @@
 import { getUserInfo, login } from '@/api/user';
+import { getCodeItems } from '@/api/plugin';
 import { getAccessToken, removeAccessToken, setAccessToken } from '@utils/accessToken';
 
 import { setting } from '@/config/setting.config';
@@ -13,7 +14,7 @@ const state = {
   username: '',
   avatar: '',
   permissions: [],
-  pageHeaderHeight: 0
+  pageHeaderHeight: 0,
 };
 
 const getters = {
@@ -21,7 +22,7 @@ const getters = {
   username: (state) => state.username,
   avatar: (state) => state.avatar,
   permissions: (state) => state.permissions,
-  pageHeaderHeight: (state) => state.pageHeaderHeight
+  pageHeaderHeight: (state) => state.pageHeaderHeight,
 };
 const mutations = {
   setAccessToken(state, accessToken) {
@@ -39,7 +40,7 @@ const mutations = {
   },
   setPageHeaderHeight: (state, height) => {
     state.pageHeaderHeight = height;
-  },
+  }
 };
 const actions = {
   setPermissions({ commit }, permissions) {
@@ -66,6 +67,11 @@ const actions = {
         message: `欢迎登录 ${title}!`,
         type: 'success',
       });
+      //加载代码值
+      const { data } = await getCodeItems();
+      if(data){
+        sessionStorage.setItem('codeItems',JSON.stringify(data))
+      }
     } else {
       ElMessage.error(`登录接口异常，未正确返回${tokenName}...`);
     }

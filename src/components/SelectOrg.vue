@@ -7,13 +7,14 @@
       :multiple="multiple"
       filterable
       clearable
+      :props="defaultProps"
       :placeholder="placeholder"
       @change="getValue"/>
 </template>
 
 <script>
 import {reactive, toRefs} from 'vue'
-import { getOrgTree } from "../api/org";
+import { getOrgTree } from "../api/org/dept";
 export default {
   name: "orgTree",
   props: {
@@ -41,6 +42,11 @@ export default {
       emit('getOrgId',val);
       console.log(val)
     }
+    const defaultProps = {
+      value:'id',
+      children: 'children',
+      label: 'deptName',
+    }
     onMounted(()=>{
       getOrgTree().then((res) => {
         data.treeData = res.data;
@@ -48,7 +54,8 @@ export default {
     })
     return {
       ...toRefs(data),
-      getValue
+      getValue,
+      defaultProps
     };
   },
 }

@@ -120,6 +120,13 @@ export default ({ mode }) =>
             fs: {
                 strict: false,
             },
+            proxy: {
+                '/api': {
+                    target: 'http://localhost:8888',
+                    changeOrigin: true,//是否跨域
+                    rewrite: (path) => path.replace(/^\/api/, ''),
+                }
+            }
         },
         // css 处理
         css: {

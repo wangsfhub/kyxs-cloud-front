@@ -32,7 +32,7 @@
     import SelectPerson from "@components/SelectPerson.vue"
     import SelectRole from "@components/SelectRole.vue"
     import { ElLoading,ElMessage } from "element-plus"
-    import {getOrgList} from "../../api/org";
+    import {getOrgList} from "../../api/org/dept";
     const drawer = ref(null)
     const personDialog = ref(null)
     const roleDialog = ref(null)

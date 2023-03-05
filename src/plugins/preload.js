@@ -52,7 +52,7 @@ All.prototype = {
     removeEle(arr, elem, key = 'id') {
         var includesIndex;
         arr.map((item, index) => {
-            if (item[key] == elem[key]) {
+            if (item[key] === elem[key]) {
                 includesIndex = index
             }
         });
@@ -64,7 +64,7 @@ All.prototype = {
         if(isIncludes){
             this.removeEle(arr, elem, key)
         }
-        if(elem.value!=''){
+        if(elem.value){
             arr.push(elem);
         }
     },

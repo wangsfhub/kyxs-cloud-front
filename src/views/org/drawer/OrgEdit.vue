@@ -1,5 +1,5 @@
 <template>
-    <RightDrawer ref="drawer" title="新增" @submit="submitForm(orgFormRef)">
+    <RightDrawer ref="drawer" title="新增" @submit="submitForm(orgFormRef)" @close="restForm(orgFormRef)">
         <template #default>
             <el-form
                     ref="orgFormRef"
@@ -7,27 +7,26 @@
                     :rules="rules"
                     label-width="80px"
             >
-                <el-form-item label="部门名称" prop="orgName">
-                    <el-input v-model="orgForm.orgName" style="width:250px" placeholder="请输入部门名称"/>
+                <el-form-item label="部门名称" prop="deptName">
+                    <el-input v-model="orgForm.deptName" style="width:250px" placeholder="请输入部门名称"/>
                 </el-form-item>
                 <el-form-item label="部门编号">
-                    <el-input v-model="orgForm.orgNo" style="width:250px" placeholder="请输入部门编号"/>
+                    <el-input v-model="orgForm.deptNo" style="width:250px" placeholder="请输入部门编号"/>
                 </el-form-item>
-                <el-form-item label="上级部门" prop="superId">
+                <el-form-item v-if="orgForm.superId!=-1" label="上级部门" prop="superId">
                     <select-org v-model="orgForm.superId" style="width:250px" placeholder="请选择上级部门"></select-org>
                 </el-form-item>
-                <el-form-item label="部门类别" prop="orgType">
-                    <select-code v-model="orgForm.orgType" set-id="9001" style="width:250px" placeholder="请选择组织类别"></select-code>
+                <el-form-item label="部门类别" prop="deptType">
+                    <select-code v-model="orgForm.deptType" set-id="11" :disabled="orgForm.superId==-1?true:false" style="width:250px" placeholder="请选择组织类别"></select-code>
                 </el-form-item>
                 <el-form-item label="负责人">
                     <select-button @change="getPersons"></select-button>
-<!--                    <el-input v-model="orgForm.chargePerson" style="width:250px" placeholder="请选择负责人"/>-->
                 </el-form-item>
                 <el-form-item label="编制人数" prop="headCount">
                     <el-input v-model="orgForm.headCount" style="width:250px" placeholder="请输入编制人数"/>
                 </el-form-item>
                 <el-form-item label="部门描述">
-                    <el-input v-model="orgForm.orgDesc" type="textarea" style="width:250px" placeholder="请输入组织描述"/>
+                    <el-input v-model="orgForm.deptDesc" type="textarea" style="width:250px" placeholder="请输入组织描述"/>
                 </el-form-item>
             </el-form>
         </template>
@@ -38,7 +37,7 @@
     import { ElMessage } from 'element-plus'
     import {getCurrentInstance, reactive, ref} from 'vue'
     import { checkInteger } from '@/utils/validate'
-    import { saveOrgInfo } from "../../../api/org";
+    import { saveOrgInfo } from "@/api/org/dept";
     const context = getCurrentInstance()?.appContext.config.globalProperties;
     const func = context?.$func;
 
@@ -51,28 +50,33 @@
       }
       drawer.value.isOpen()
     };
+    const addNext = (superId)=>{
+      orgForm.superId = superId
+      drawer.value.isOpen()
+    }
     const emit = defineEmits(['refresh'])
     defineExpose({
-        init
+        init,
+        addNext
     })
     const orgForm = reactive({
         id: '',
         superId:'',
-        orgName: '',
-        orgNo: '',
-        orgType: '',
-        chargePerson: '',
+        deptName: '',
+        deptNo: '',
+        deptType: '',
+        leaver: '',
         headCount: '',
-        orgDesc:''
+        deptDesc:''
     })
     const rules = reactive({
-        orgName: [{required: true, message: '请输入部门名称', trigger: 'blur' }],
+        deptName: [{required: true, message: '请输入部门名称', trigger: 'blur' }],
         superId: [{required: true, message: '请选择上级部门', trigger: 'change'}],
-        orgType: [{required: true, message: '请选择类别', trigger: 'change'}],
+        deptType: [{required: true, message: '请选择类别', trigger: 'change'}],
         headCount: [{ validator: checkInteger, trigger: 'blur' }],
     })
     const getPersons = (arr) =>{
-      orgForm.chargePerson = func.joinArrayProperties(arr);
+      orgForm.leaver = func.joinArrayProperties(arr);
     }
     const submitForm = async (formEl) => {
         if (!formEl) return
@@ -88,6 +92,13 @@
             }
         })
     }
+    // 重置表单方法
+    const restForm = (formEl) => {
+      formEl.resetFields();
+      Object.keys(orgForm).forEach(function (key) {
+        orgForm[key] = ''
+      })
+    };
 </script>
 
 

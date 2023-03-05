@@ -2,22 +2,24 @@
   <el-select
       v-model="value"
       :multiple="multiple"
+      :disabled="disabled"
       filterable
       clearable
       :placeholder="placeholder"
       @change="getValue">
-    <el-option
-        v-for="item in options"
-        :key="item.codeId"
-        :label="item.codeName"
-        :value="item.codeId"
-    />
+    <template v-for="item in options" :key="item.id">
+      <el-option
+          :disabled="item.codeStatus=='0'?true:false"
+          :label="item.codeName"
+          :value="item.id"
+      />
+    </template>
   </el-select>
 </template>
 
 <script>
 import {ref,reactive, toRefs} from 'vue'
-import {getAllCodes} from "../api/code";
+import {getCodeItemBySetId} from "../utils/codeItem";
 export default {
   name: "SelectCode",
   props: {
@@ -33,6 +35,10 @@ export default {
       type: Boolean,
       default: false
     },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
   },
   setup(props,{ emit }) {
     const data = reactive({
@@ -41,6 +47,7 @@ export default {
       codeId: [],
       codeName: '',
       multiple: props.multiple,
+      disabled: props.disabled,
       placeholder: props.placeholder,
       options:[]
     });
@@ -48,11 +55,9 @@ export default {
       emit('getValue',data)
     }
     onMounted(()=>{
-      getAllCodes().then((res) => {
-        if(data.setId){
-          data.options = res.data[data.setId]
-        }
-      });
+      if(data.setId){
+        data.options = getCodeItemBySetId(data.setId)
+      }
     })
     return {
       ...toRefs(data),

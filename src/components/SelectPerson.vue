@@ -129,6 +129,7 @@
 .person_body {
   border: 1px solid #f5f5f5;
   height: 400px;
+  display: flex;
 }
 .tree_nav span {
   display: inline-block;
