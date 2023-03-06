@@ -19,12 +19,26 @@ export const getOrgList = async (data={superId:-1}) => {
 };
 
 //保存部门信息
-export const saveOrgInfo = async (data) => {
+export const saveOrgInfo = (data) => {
     return request({
         url: '/dept/save',
         method: 'post',
         data:data
     });
 };
-
+//保存变更信息
+export const saveChangeInfo = (data) => {
+    return request({
+        url: '/dept/change',
+        method: 'post',
+        data:data
+    });
+};
+//保存变更信息
+export const getOrgDetail = (id) => {
+    return request({
+        url: '/dept/detail/'+id,
+        method: 'get',
+    });
+};
 

@@ -6,7 +6,7 @@
       </template>
       <template #right>
         <el-button type="primary" @click="add">新增</el-button>
-        <el-button type="primary">组织变更</el-button>
+        <el-button type="primary" @click="change">组织变更</el-button>
         <el-dropdown ref="orgMoreBtn" class="mar-l-10" @command="handleCommand">
           <el-button type="primary" plain>
             更多<el-icon class="el-icon--right"><i-ep-arrow-down /></el-icon>
@@ -64,6 +64,7 @@
       </el-table-column>
     </el-table>
     <OrgEdit ref="orgEdit" @refresh="query"></OrgEdit>
+    <OrgChange ref="orgChange" @refresh="query"></OrgChange>
   </div>
 </template>
 <script setup>
@@ -77,6 +78,7 @@
 // }
 //
 import OrgEdit from './drawer/OrgEdit.vue'
+import OrgChange from './drawer/OrgChange.vue'
 import { ElMessage } from "element-plus";
 import {getOrgList} from "../../api/org/dept";
 import {translateCode} from "../../utils/codeItem";
@@ -88,11 +90,18 @@ const context = getCurrentInstance()?.appContext.config.globalProperties;
 const func = context?.$func;
 
 const orgEdit = ref(null)
+const orgChange = ref(null)
 const add = () =>{
   nextTick(() => {
     orgEdit.value.init({})
   })
 }
+const change = () =>{
+  nextTick(() => {
+    orgChange.value.init()
+  })
+}
+
 //表头筛选数组对象
 const filters = ref([]);
 const filterObj = reactive({
@@ -129,7 +138,7 @@ const handleCommand = (command) => {
       ElMessage.success('组织架构图');
       break;
     case 'change':
-      ElMessage.success('组织变更');
+      ElMessage.success('变更日志');
       break;
     case 'export':
       ElMessage.success('导出');

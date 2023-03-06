@@ -39,7 +39,7 @@ export default {
       placeholder: props.placeholder,
     });
     const getValue = (val) => {
-      emit('getOrgId',val);
+      emit('change',val);
       console.log(val)
     }
     const defaultProps = {

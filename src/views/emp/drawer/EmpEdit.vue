@@ -6,6 +6,7 @@
                     :model="empForm"
                     :rules="rules"
                     label-width="80px"
+                    :scroll-to-error="true"
             >
                 <el-form-item label="员工姓名" prop="empName">
                     <el-input v-model="empForm.empName" style="width:250px" placeholder="请输入员工姓名"/>

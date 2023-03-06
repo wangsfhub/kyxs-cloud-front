@@ -22,10 +22,10 @@
                 <el-form-item label="编制人数">
                     <el-input v-model="postForm.headCount" style="width:250px" placeholder="请输入编制人数"/>
                 </el-form-item>
-                <el-form-item label="岗位工资">
+                <el-form-item label="岗位工资" prop="postSalary">
                     <el-input v-model="postForm.postSalary" style="width:250px" placeholder="请输入岗位工资"/>
                 </el-form-item>
-                <el-form-item label="岗位描述">
+                <el-form-item label="岗位描述" prop="postDesc">
                     <el-input v-model="postForm.postDesc" type="textarea" style="width:250px" placeholder="请输入岗位描述"/>
                 </el-form-item>
             </el-form>
@@ -37,6 +37,7 @@
     import { ElMessage } from 'element-plus'
     import {getCurrentInstance, reactive, ref,nextTick} from 'vue'
     import {savePostInfo} from "@/api/org/position";
+    import { checkDesc,checkDecimal } from '@/utils/validate'
     const context = getCurrentInstance()?.appContext.config.globalProperties;
     const func = context?.$func;
     const postFormRef = ref(null)
@@ -67,6 +68,8 @@
         department: [{required: true, message: '请选择所属部门', trigger: 'change'}],
         postType: [{required: true, message: '请选择类别', trigger: 'change'}],
         postStatus: [{required: true, message: '请选择岗位状态', trigger: 'change'}],
+        postSalary: [{ validator: checkDecimal, trigger: 'blur' }],
+        postDesc: [{ validator: checkDesc, trigger: 'blur' }]
     })
 
     const submitForm = async (formEl) => {

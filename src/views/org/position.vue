@@ -22,7 +22,7 @@
     import PageHeader from "@components/PageHeader.vue";
     import MycTable from "@components/MycTable.vue";
     import OrgTree from "@components/OrgTree.vue";
-    import { ElLoading,ElMessage } from "element-plus"
+    import {ElLoading, ElMessage, ElMessageBox} from "element-plus"
     import {getPostList,updatePostStatus,deleteById} from "../../api/org/position";
     const context = getCurrentInstance()?.appContext.config.globalProperties;
     const func = context?.$func;
@@ -207,13 +207,20 @@
     }
     //删除
     const del = (row, $index) =>{
-      deleteById(row.id).then((res)=>{
-        if(res.code==0){
-          ElMessage.success('删除成功')
-          pageObj.pageData.current = 1;
-          query();
-        }
-      })
+      ElMessageBox.confirm('确定要删除该岗位吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        dangerouslyUseHTMLString: true,
+        type: 'warning',
+      }).then(async () => {
+        deleteById(row.id).then((res)=>{
+          if(res.code==0){
+            ElMessage.success('删除成功')
+            pageObj.pageData.current = 1;
+            query();
+          }
+        })
+      }).catch(() => {});
     }
     //修改启用禁用状态
     const switchChange = (row, $index, prop) => {

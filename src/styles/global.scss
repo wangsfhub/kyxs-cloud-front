@@ -1,9 +1,28 @@
 @import './common.scss';
 @import './theme/light.scss';
 @import './theme/dark.scss';
+
+.mar-t-10{
+  margin-top: 10px;
+}
+.mar-t-20{
+  margin-top: 20px;
+}
 .mar-l-10{
   margin-left: 10px;
 }
 .mar-l-20{
   margin-left: 20px;
+}
+.mar-r-10{
+  margin-right: 10px;
+}
+.mar-r-20{
+  margin-right: 20px;
+}
+.mar-b-10{
+  margin-bottom: 10px;
+}
+.mar-b-20{
+  margin-bottom: 20px;
 }

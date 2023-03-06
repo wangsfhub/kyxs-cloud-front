@@ -5,15 +5,16 @@
         <OrgTree @getOrgId="setOrgId"/>
       </template>
       <template #right>
-        <el-button type="primary" @click="add">新增</el-button>
-        <el-button type="primary">岗位架构图</el-button>
+        <el-button type="primary" @click="handleAdd">新增</el-button>
+        <el-button type="primary" @click="handleCustom">自定义表头</el-button>
         <el-button type="primary">导出</el-button>
       </template>
     </PageHeader>
     <MycTable :tableData="tableData" :columObj="columObj" :pageObj="pageObj" @filterChange="filterChange" @switchChange="switchChange" @editInputBlur="editInputBlur" @rowClick="rowClick"
               @handleSizeChange="handleSizeChange" @handleCurrentChange="handleCurrentChange">
     </MycTable>
-    <PostEdit ref="postEdit"  @refresh="query"></PostEdit>
+    <PostEdit ref="empEdit"  @refresh="query"></PostEdit>
+    <CustomHeader ref="customHeader"  @change="changeHeader"></CustomHeader>
   </div>
 </template>
 <script setup>
@@ -22,11 +23,14 @@ import {ref, reactive, getCurrentInstance, nextTick} from 'vue'
 import PageHeader from "@components/PageHeader.vue";
 import MycTable from "@components/MycTable.vue";
 import OrgTree from "@components/OrgTree.vue";
+import CustomHeader from "@components/CustomHeader.vue";
 import { ElLoading,ElMessage } from "element-plus"
 import {getPostList,updatePostStatus,deleteById} from "../../api/org/position";
+import {getAllHeader, getCurrentHeader, saveCustomHeader} from "../../api/customHeader";
 const context = getCurrentInstance()?.appContext.config.globalProperties;
 const func = context?.$func;
-const postEdit = ref(null)
+const empEdit = ref(null)
+const customHeader = ref(null)
 let { proxy } = getCurrentInstance();
 let pageObj = reactive({ //分页对象
   position: "right", //分页组件位置  center/right/left
@@ -38,10 +42,75 @@ let pageObj = reactive({ //分页对象
   }
 });
 //加载表哥数据
-let tableData = ref([]);
+const tableData = ref([]);
 onMounted(()=>{
+  getCusHeader()
   query()
 })
+const moduleCode = ref('empInfo')
+const getCusHeader = () =>{
+  getCurrentHeader(moduleCode.value).then(res=>{
+    let { data } = res;
+    //格式化数据支持表格样式
+    let list = [];
+    data.forEach(item=>{
+      let obj = {
+        //text: true,
+        //filter: {type:'input',operator:'like'},
+        prop: item.itemCode,
+        label: item.itemName,
+        width: "",
+        align: "center",
+        //sortable: true
+      }
+      if(item.isFilter=='1'){
+        obj.filter = {type:'input',operator:'like'}
+      }
+      if(item.isSort=='1'){
+        obj.sortable = true
+      }
+      if(item.itemType==9){
+        obj.code = true
+        obj.setId = item.codeSetId
+      }else{
+        obj.text = true
+      }
+      list.push(obj);
+    })
+    //追加操作列
+    let operator = {
+          isOperation: true,
+          label: "操作",
+          width: "120",
+          align: "center",
+          sortable: false,
+          fixed: 'right',
+          operation: [{
+            type: "primary",
+            label: "编辑",
+            icon: "",
+            buttonClick: (row, $index) => {
+              edit(row,$index)
+            },
+            isShow: (row, $index) => {
+              return true;
+            }
+          }, {
+            type: "primary",
+            label: "删除",
+            icon: "",
+            buttonClick:(row, $index) => {
+              del(row,$index)
+            },
+            isShow: (row, $index) => {
+              return true;
+            }
+          }]
+        }
+    list.push(operator)
+    columObj.columnData = list
+  })
+}
 const query = ()=>{
   getPostList(pageObj.pageData).then((res)=>{
     tableData.value = res.data.records;
@@ -195,15 +264,30 @@ const filterChange = (item)=>{
   pageObj.pageData.current = 1;
   query()
 }
-const add = () =>{
+const handleAdd = () =>{
   nextTick(() => {
-    postEdit.value.init()
+    empEdit.value.init()
+  })
+}
+const handleCustom = () =>{
+  getAllHeader(moduleCode.value).then(res=>{
+    customHeader.value.isOpen(res.data)
+  })
+}
+const changeHeader = (headers)=>{
+  saveCustomHeader({moduleCode:'empInfo',headers:headers}).then(res=>{
+    if(res.code==0){
+      ElMessage.success("自定义表头成功")
+      customHeader.value.isClose()
+      getCusHeader()
+      query()
+    }
   })
 }
 //编辑
 const edit = (row, $index) =>{
   console.log(row, $index)
-  postEdit.value.init(row)
+  empEdit.value.init(row)
 }
 //删除
 const del = (row, $index) =>{

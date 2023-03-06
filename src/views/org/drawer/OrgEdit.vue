@@ -25,8 +25,8 @@
                 <el-form-item label="编制人数" prop="headCount">
                     <el-input v-model="orgForm.headCount" style="width:250px" placeholder="请输入编制人数"/>
                 </el-form-item>
-                <el-form-item label="部门描述">
-                    <el-input v-model="orgForm.deptDesc" type="textarea" style="width:250px" placeholder="请输入组织描述"/>
+                <el-form-item label="部门描述" prop="deptDesc">
+                    <el-input v-model="orgForm.deptDesc" type="textarea" style="width:250px" placeholder="请输入部门描述"/>
                 </el-form-item>
             </el-form>
         </template>
@@ -36,7 +36,7 @@
 <script setup>
     import { ElMessage } from 'element-plus'
     import {getCurrentInstance, reactive, ref} from 'vue'
-    import { checkInteger } from '@/utils/validate'
+    import { checkInteger,checkDesc } from '@/utils/validate'
     import { saveOrgInfo } from "@/api/org/dept";
     const context = getCurrentInstance()?.appContext.config.globalProperties;
     const func = context?.$func;
@@ -74,6 +74,7 @@
         superId: [{required: true, message: '请选择上级部门', trigger: 'change'}],
         deptType: [{required: true, message: '请选择类别', trigger: 'change'}],
         headCount: [{ validator: checkInteger, trigger: 'blur' }],
+        deptDesc: [{ validator: checkDesc, trigger: 'blur' }],
     })
     const getPersons = (arr) =>{
       orgForm.leaver = func.joinArrayProperties(arr);

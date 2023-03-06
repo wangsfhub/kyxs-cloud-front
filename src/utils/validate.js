@@ -12,6 +12,18 @@ export const checkInteger = (rule, value, callback) => {
     }
 }
 /**
+ * 校验金额
+ */
+export const checkDecimal = (rule,value,callback) => {
+    let regExp = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+    if (value && !regExp.test(value)) {
+        callback(new Error('请输入正确的数据格式'))
+    }else{
+        callback()
+    }
+}
+
+/**
  * 校验手机号
  */
 export const checkPhone = (rule, value, callback) => {
@@ -51,6 +63,16 @@ export const checkChar = (rule,value,callback) => {
     let regExp = /^[A-Za-z0-9]{3,20}$/
     if (value && !regExp.test(value)) {
         callback(new Error('请输入数字字符组合，长度在3-20字符'))
+    }else{
+        callback()
+    }
+}
+/**
+ * 校验描述长度
+ */
+export const checkDesc = (rule,value,callback) => {
+    if (value && value.length>100) {
+        callback(new Error('描述长度在100字符以内'))
     }else{
         callback()
     }

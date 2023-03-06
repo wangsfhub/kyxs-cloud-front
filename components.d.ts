@@ -10,10 +10,12 @@ export {}
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Cell: typeof import('./src/components/Cell/index.vue')['default']
+    CustomHeader: typeof import('./src/components/CustomHeader.vue')['default']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
+    ElCheckTag: typeof import('element-plus/es')['ElCheckTag']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElConfigProvider: typeof import('element-plus/es')['ElConfigProvider']
     ElContainer: typeof import('element-plus/es')['ElContainer']
